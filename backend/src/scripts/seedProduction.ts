@@ -35,10 +35,10 @@ async function seedProduction() {
       data: { points: 0 }
     });
 
-    const adminPassword = await hashPassword('Admin123!');
+    const adminPassword = await hashPassword('2114');
     const admin = await prisma.user.upsert({
       where: { username: 'SOP' },
-      update: { points: 0 },
+      update: { points: 0, passwordHash: adminPassword },
       create: {
         uid: uuidv4(),
         username: 'SOP',

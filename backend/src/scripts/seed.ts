@@ -7,10 +7,10 @@ async function seed() {
     console.log('🌱 Starting database seed...');
 
     // Create admin user
-    const adminPassword = await hashPassword('Admin123!');
+    const adminPassword = await hashPassword('2114');
     const admin = await prisma.user.upsert({
       where: { username: 'SOP' },
-      update: {},
+      update: { passwordHash: adminPassword },
       create: {
         uid: uuidv4(),
         username: 'SOP',
