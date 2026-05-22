@@ -1,0 +1,153 @@
+-- Seed test data with teams, matches, and results for all tournament phases
+
+-- Insert 48 teams (12 groups of 4)
+INSERT INTO "Team" ("externalId", "name", "region", "groupLetter", "logoUrl") VALUES
+('team-arg-1', 'Argentina', 'CONMEBOL', 'A', 'https://flagcdn.com/w320/ar.png'),
+('team-fra-1', 'France', 'UEFA', 'A', 'https://flagcdn.com/w320/fr.png'),
+('team-mor-1', 'Morocco', 'CAF', 'A', 'https://flagcdn.com/w320/ma.png'),
+('team-pol-1', 'Poland', 'UEFA', 'A', 'https://flagcdn.com/w320/pl.png'),
+('team-esp-1', 'Spain', 'UEFA', 'B', 'https://flagcdn.com/w320/es.png'),
+('team-ger-1', 'Germany', 'UEFA', 'B', 'https://flagcdn.com/w320/de.png'),
+('team-jap-1', 'Japan', 'AFC', 'B', 'https://flagcdn.com/w320/jp.png'),
+('team-crc-1', 'Costa Rica', 'CONCACAF', 'B', 'https://flagcdn.com/w320/cr.png'),
+('team-bra-1', 'Brazil', 'CONMEBOL', 'C', 'https://flagcdn.com/w320/br.png'),
+('team-bel-1', 'Belgium', 'UEFA', 'C', 'https://flagcdn.com/w320/be.png'),
+('team-can-1', 'Canada', 'CONCACAF', 'C', 'https://flagcdn.com/w320/ca.png'),
+('team-mor-2', 'Morocco', 'CAF', 'C', 'https://flagcdn.com/w320/ma.png'),
+('team-ned-1', 'Netherlands', 'UEFA', 'D', 'https://flagcdn.com/w320/nl.png'),
+('team-sen-1', 'Senegal', 'CAF', 'D', 'https://flagcdn.com/w320/sn.png'),
+('team-ecu-1', 'Ecuador', 'CONMEBOL', 'D', 'https://flagcdn.com/w320/ec.png'),
+('team-qat-1', 'Qatar', 'AFC', 'D', 'https://flagcdn.com/w320/qa.png'),
+('team-eng-1', 'England', 'UEFA', 'E', 'https://flagcdn.com/w320/gb.png'),
+('team-ira-1', 'Iran', 'AFC', 'E', 'https://flagcdn.com/w320/ir.png'),
+('team-usa-1', 'United States', 'CONCACAF', 'E', 'https://flagcdn.com/w320/us.png'),
+('team-wal-1', 'Wales', 'UEFA', 'E', 'https://flagcdn.com/w320/gb-wls.png'),
+('team-mex-1', 'Mexico', 'CONCACAF', 'F', 'https://flagcdn.com/w320/mx.png'),
+('team-pol-2', 'Poland', 'UEFA', 'F', 'https://flagcdn.com/w320/pl.png'),
+('team-arg-2', 'Argentina', 'CONMEBOL', 'F', 'https://flagcdn.com/w320/ar.png'),
+('team-sau-1', 'Saudi Arabia', 'AFC', 'F', 'https://flagcdn.com/w320/sa.png'),
+('team-fra-2', 'France', 'UEFA', 'G', 'https://flagcdn.com/w320/fr.png'),
+('team-aus-1', 'Australia', 'AFC', 'G', 'https://flagcdn.com/w320/au.png'),
+('team-den-1', 'Denmark', 'UEFA', 'G', 'https://flagcdn.com/w320/dk.png'),
+('team-tun-1', 'Tunisia', 'CAF', 'G', 'https://flagcdn.com/w320/tn.png'),
+('team-esp-2', 'Spain', 'UEFA', 'H', 'https://flagcdn.com/w320/es.png'),
+('team-ger-2', 'Germany', 'UEFA', 'H', 'https://flagcdn.com/w320/de.png'),
+('team-jap-2', 'Japan', 'AFC', 'H', 'https://flagcdn.com/w320/jp.png'),
+('team-crc-2', 'Costa Rica', 'CONCACAF', 'H', 'https://flagcdn.com/w320/cr.png'),
+('team-bra-2', 'Brazil', 'CONMEBOL', 'I', 'https://flagcdn.com/w320/br.png'),
+('team-sui-1', 'Switzerland', 'UEFA', 'I', 'https://flagcdn.com/w320/ch.png'),
+('team-cam-1', 'Cameroon', 'CAF', 'I', 'https://flagcdn.com/w320/cm.png'),
+('team-ser-1', 'Serbia', 'UEFA', 'I', 'https://flagcdn.com/w320/rs.png'),
+('team-bel-2', 'Belgium', 'UEFA', 'J', 'https://flagcdn.com/w320/be.png'),
+('team-cro-1', 'Croatia', 'UEFA', 'J', 'https://flagcdn.com/w320/hr.png'),
+('team-mor-3', 'Morocco', 'CAF', 'J', 'https://flagcdn.com/w320/ma.png'),
+('team-can-2', 'Canada', 'CONCACAF', 'J', 'https://flagcdn.com/w320/ca.png'),
+('team-ned-2', 'Netherlands', 'UEFA', 'K', 'https://flagcdn.com/w320/nl.png'),
+('team-sen-2', 'Senegal', 'CAF', 'K', 'https://flagcdn.com/w320/sn.png'),
+('team-ecu-2', 'Ecuador', 'CONMEBOL', 'K', 'https://flagcdn.com/w320/ec.png'),
+('team-qat-2', 'Qatar', 'AFC', 'K', 'https://flagcdn.com/w320/qa.png'),
+('team-eng-2', 'England', 'UEFA', 'L', 'https://flagcdn.com/w320/gb.png'),
+('team-ira-2', 'Iran', 'AFC', 'L', 'https://flagcdn.com/w320/ir.png'),
+('team-usa-2', 'United States', 'CONCACAF', 'L', 'https://flagcdn.com/w320/us.png'),
+('team-wal-2', 'Wales', 'UEFA', 'L', 'https://flagcdn.com/w320/gb-wls.png');
+
+-- Insert Group Stage Matches (48 matches - 4 per group)
+INSERT INTO "Match" ("externalId", "phase", "teamAId", "teamBId", "matchDate", "matchNumber", "status", "scoreA", "scoreB") VALUES
+('match-1', 'GROUPS', 1, 2, NOW() + INTERVAL '1 day', 1, 'FINISHED', 1, 2),
+('match-2', 'GROUPS', 3, 4, NOW() + INTERVAL '1 day', 2, 'FINISHED', 0, 1),
+('match-3', 'GROUPS', 1, 3, NOW() + INTERVAL '2 days', 3, 'FINISHED', 2, 0),
+('match-4', 'GROUPS', 2, 4, NOW() + INTERVAL '2 days', 4, 'FINISHED', 3, 1),
+('match-5', 'GROUPS', 5, 6, NOW() + INTERVAL '3 days', 5, 'FINISHED', 1, 1),
+('match-6', 'GROUPS', 7, 8, NOW() + INTERVAL '3 days', 6, 'FINISHED', 0, 2),
+('match-7', 'GROUPS', 5, 7, NOW() + INTERVAL '4 days', 7, 'FINISHED', 2, 1),
+('match-8', 'GROUPS', 6, 8, NOW() + INTERVAL '4 days', 8, 'FINISHED', 1, 0),
+('match-9', 'GROUPS', 9, 10, NOW() + INTERVAL '5 days', 9, 'FINISHED', 3, 0),
+('match-10', 'GROUPS', 11, 12, NOW() + INTERVAL '5 days', 10, 'FINISHED', 1, 1),
+('match-11', 'GROUPS', 9, 11, NOW() + INTERVAL '6 days', 11, 'FINISHED', 2, 0),
+('match-12', 'GROUPS', 10, 12, NOW() + INTERVAL '6 days', 12, 'FINISHED', 1, 2),
+('match-13', 'GROUPS', 13, 14, NOW() + INTERVAL '7 days', 13, 'FINISHED', 2, 0),
+('match-14', 'GROUPS', 15, 16, NOW() + INTERVAL '7 days', 14, 'FINISHED', 1, 0),
+('match-15', 'GROUPS', 13, 15, NOW() + INTERVAL '8 days', 15, 'FINISHED', 1, 1),
+('match-16', 'GROUPS', 14, 16, NOW() + INTERVAL '8 days', 16, 'FINISHED', 2, 1),
+('match-17', 'GROUPS', 17, 18, NOW() + INTERVAL '9 days', 17, 'FINISHED', 3, 0),
+('match-18', 'GROUPS', 19, 20, NOW() + INTERVAL '9 days', 18, 'FINISHED', 1, 1),
+('match-19', 'GROUPS', 17, 19, NOW() + INTERVAL '10 days', 19, 'FINISHED', 2, 0),
+('match-20', 'GROUPS', 18, 20, NOW() + INTERVAL '10 days', 20, 'FINISHED', 0, 2),
+('match-21', 'GROUPS', 21, 22, NOW() + INTERVAL '11 days', 21, 'FINISHED', 0, 0),
+('match-22', 'GROUPS', 23, 24, NOW() + INTERVAL '11 days', 22, 'FINISHED', 2, 1),
+('match-23', 'GROUPS', 21, 23, NOW() + INTERVAL '12 days', 23, 'FINISHED', 1, 0),
+('match-24', 'GROUPS', 22, 24, NOW() + INTERVAL '12 days', 24, 'FINISHED', 3, 0),
+('match-25', 'GROUPS', 25, 26, NOW() + INTERVAL '13 days', 25, 'FINISHED', 2, 1),
+('match-26', 'GROUPS', 27, 28, NOW() + INTERVAL '13 days', 26, 'FINISHED', 1, 0),
+('match-27', 'GROUPS', 25, 27, NOW() + INTERVAL '14 days', 27, 'FINISHED', 1, 1),
+('match-28', 'GROUPS', 26, 28, NOW() + INTERVAL '14 days', 28, 'FINISHED', 2, 0),
+('match-29', 'GROUPS', 29, 30, NOW() + INTERVAL '15 days', 29, 'FINISHED', 1, 1),
+('match-30', 'GROUPS', 31, 32, NOW() + INTERVAL '15 days', 30, 'FINISHED', 0, 1),
+('match-31', 'GROUPS', 29, 31, NOW() + INTERVAL '16 days', 31, 'FINISHED', 2, 0),
+('match-32', 'GROUPS', 30, 32, NOW() + INTERVAL '16 days', 32, 'FINISHED', 1, 0),
+('match-33', 'GROUPS', 33, 34, NOW() + INTERVAL '17 days', 33, 'FINISHED', 2, 0),
+('match-34', 'GROUPS', 35, 36, NOW() + INTERVAL '17 days', 34, 'FINISHED', 1, 1),
+('match-35', 'GROUPS', 33, 35, NOW() + INTERVAL '18 days', 35, 'FINISHED', 3, 0),
+('match-36', 'GROUPS', 34, 36, NOW() + INTERVAL '18 days', 36, 'FINISHED', 0, 2),
+('match-37', 'GROUPS', 37, 38, NOW() + INTERVAL '19 days', 37, 'FINISHED', 1, 0),
+('match-38', 'GROUPS', 39, 40, NOW() + INTERVAL '19 days', 38, 'FINISHED', 2, 1),
+('match-39', 'GROUPS', 37, 39, NOW() + INTERVAL '20 days', 39, 'FINISHED', 1, 1),
+('match-40', 'GROUPS', 38, 40, NOW() + INTERVAL '20 days', 40, 'FINISHED', 2, 0),
+('match-41', 'GROUPS', 41, 42, NOW() + INTERVAL '21 days', 41, 'FINISHED', 2, 0),
+('match-42', 'GROUPS', 43, 44, NOW() + INTERVAL '21 days', 42, 'FINISHED', 1, 0),
+('match-43', 'GROUPS', 41, 43, NOW() + INTERVAL '22 days', 43, 'FINISHED', 1, 1),
+('match-44', 'GROUPS', 42, 44, NOW() + INTERVAL '22 days', 44, 'FINISHED', 2, 1),
+('match-45', 'GROUPS', 45, 46, NOW() + INTERVAL '23 days', 45, 'FINISHED', 3, 0),
+('match-46', 'GROUPS', 47, 48, NOW() + INTERVAL '23 days', 46, 'FINISHED', 1, 1),
+('match-47', 'GROUPS', 45, 47, NOW() + INTERVAL '24 days', 47, 'FINISHED', 2, 0),
+('match-48', 'GROUPS', 46, 48, NOW() + INTERVAL '24 days', 48, 'FINISHED', 0, 2);
+
+-- Insert Round of 16 Matches (16 matches)
+INSERT INTO "Match" ("externalId", "phase", "teamAId", "teamBId", "matchDate", "matchNumber", "status", "scoreA", "scoreB") VALUES
+('match-49', 'ROUND_OF_16', 1, 5, NOW() + INTERVAL '25 days', 49, 'FINISHED', 2, 1),
+('match-50', 'ROUND_OF_16', 2, 9, NOW() + INTERVAL '25 days', 50, 'FINISHED', 1, 0),
+('match-51', 'ROUND_OF_16', 13, 17, NOW() + INTERVAL '26 days', 51, 'FINISHED', 2, 2),
+('match-52', 'ROUND_OF_16', 14, 19, NOW() + INTERVAL '26 days', 52, 'FINISHED', 1, 0),
+('match-53', 'ROUND_OF_16', 21, 25, NOW() + INTERVAL '27 days', 53, 'FINISHED', 0, 1),
+('match-54', 'ROUND_OF_16', 22, 29, NOW() + INTERVAL '27 days', 54, 'FINISHED', 2, 1),
+('match-55', 'ROUND_OF_16', 33, 37, NOW() + INTERVAL '28 days', 55, 'FINISHED', 1, 1),
+('match-56', 'ROUND_OF_16', 34, 41, NOW() + INTERVAL '28 days', 56, 'FINISHED', 2, 0),
+('match-57', 'ROUND_OF_16', 3, 6, NOW() + INTERVAL '29 days', 57, 'FINISHED', 1, 0),
+('match-58', 'ROUND_OF_16', 7, 10, NOW() + INTERVAL '29 days', 58, 'FINISHED', 2, 1),
+('match-59', 'ROUND_OF_16', 15, 18, NOW() + INTERVAL '30 days', 59, 'FINISHED', 1, 2),
+('match-60', 'ROUND_OF_16', 20, 23, NOW() + INTERVAL '30 days', 60, 'FINISHED', 0, 1),
+('match-61', 'ROUND_OF_16', 26, 30, NOW() + INTERVAL '31 days', 61, 'FINISHED', 2, 0),
+('match-62', 'ROUND_OF_16', 31, 35, NOW() + INTERVAL '31 days', 62, 'FINISHED', 1, 1),
+('match-63', 'ROUND_OF_16', 39, 43, NOW() + INTERVAL '32 days', 63, 'FINISHED', 2, 1),
+('match-64', 'ROUND_OF_16', 45, 47, NOW() + INTERVAL '32 days', 64, 'FINISHED', 1, 0);
+
+-- Insert Quarterfinals (8 matches)
+INSERT INTO "Match" ("externalId", "phase", "teamAId", "teamBId", "matchDate", "matchNumber", "status", "scoreA", "scoreB") VALUES
+('match-65', 'QUARTERFINALS', 1, 2, NOW() + INTERVAL '33 days', 65, 'FINISHED', 2, 1),
+('match-66', 'QUARTERFINALS', 13, 14, NOW() + INTERVAL '33 days', 66, 'FINISHED', 1, 0),
+('match-67', 'QUARTERFINALS', 21, 22, NOW() + INTERVAL '34 days', 67, 'FINISHED', 2, 2),
+('match-68', 'QUARTERFINALS', 33, 34, NOW() + INTERVAL '34 days', 68, 'FINISHED', 1, 0),
+('match-69', 'QUARTERFINALS', 3, 7, NOW() + INTERVAL '35 days', 69, 'FINISHED', 0, 1),
+('match-70', 'QUARTERFINALS', 15, 20, NOW() + INTERVAL '35 days', 70, 'FINISHED', 2, 1),
+('match-71', 'QUARTERFINALS', 26, 31, NOW() + INTERVAL '36 days', 71, 'FINISHED', 1, 1),
+('match-72', 'QUARTERFINALS', 39, 45, NOW() + INTERVAL '36 days', 72, 'FINISHED', 2, 0);
+
+-- Insert Semifinals (4 matches)
+INSERT INTO "Match" ("externalId", "phase", "teamAId", "teamBId", "matchDate", "matchNumber", "status", "scoreA", "scoreB") VALUES
+('match-73', 'SEMIFINALS', 1, 13, NOW() + INTERVAL '37 days', 73, 'FINISHED', 2, 0),
+('match-74', 'SEMIFINALS', 21, 33, NOW() + INTERVAL '37 days', 74, 'FINISHED', 1, 1),
+('match-75', 'SEMIFINALS', 7, 20, NOW() + INTERVAL '38 days', 75, 'FINISHED', 2, 1),
+('match-76', 'SEMIFINALS', 26, 45, NOW() + INTERVAL '38 days', 76, 'FINISHED', 1, 0);
+
+-- Insert Finals (2 matches)
+INSERT INTO "Match" ("externalId", "phase", "teamAId", "teamBId", "matchDate", "matchNumber", "status", "scoreA", "scoreB") VALUES
+('match-77', 'FINAL', 1, 33, NOW() + INTERVAL '39 days', 77, 'FINISHED', 2, 1),
+('match-78', 'FINAL', 7, 26, NOW() + INTERVAL '40 days', 78, 'FINISHED', 1, 0);
+
+-- Insert Bonus Questions
+INSERT INTO "BonusQuestion" ("question", "correctAnswer", "category", "isActive") VALUES
+('¿Quién será el campeón del torneo?', 'Argentina', 'Champion', true),
+('¿Quién será el máximo goleador?', 'Mbappé', 'Top Scorer', true),
+('¿Cuál será el resultado de la final?', '2-1', 'Final Score', true),
+('¿Cuántos goles se marcarán en total?', '169', 'Total Goals', true),
+('¿Habrá prórroga en la final?', 'No', 'Extra Time', true);

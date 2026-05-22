@@ -1,0 +1,213 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                Int                @id @default(autoincrement())
+  uid               String             @unique
+  username          String             @unique
+  displayName       String
+  passwordHash      String
+  role              UserRole           @default(USER)
+  points            Int                @default(0)
+  position          String?
+  photoUrl          String?
+  isActive          Boolean            @default(true)
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
+  lastLogin         DateTime?
+
+  predictions       Prediction[]
+  bonusPredictions  BonusPrediction[]
+  refreshTokens     RefreshToken[]
+  auditLogs         AuditLog[]
+
+  @@index([username])
+  @@index([uid])
+}
+
+enum UserRole {
+  ADMIN
+  USER
+}
+
+model Team {
+  id          Int       @id @default(autoincrement())
+  externalId  String    @unique
+  name        String
+  region      String
+  groupLetter String    @db.Char(1)
+  logoUrl     String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  matchesAsTeamA Match[] @relation("TeamA")
+  matchesAsTeamB Match[] @relation("TeamB")
+
+  @@index([region])
+  @@index([groupLetter])
+}
+
+model Match {
+  id                Int         @id @default(autoincrement())
+  externalId        String      @unique
+  phase             MatchPhase
+  teamAId           Int?
+  teamBId           Int?
+  scoreA            Int?
+  scoreB            Int?
+  status            MatchStatus @default(PENDING)
+  matchDate         DateTime
+  matchNumber       Int
+  winnerTeamId      Int?
+  loserTeamId       Int?
+  nextMatchId       Int?
+  nextMatchSlot     String?
+  isManualOverride  Boolean     @default(false)
+  createdAt         DateTime    @default(now())
+  updatedAt         DateTime    @updatedAt
+
+  teamA             Team?       @relation("TeamA", fields: [teamAId], references: [id], onDelete: SetNull)
+  teamB             Team?       @relation("TeamB", fields: [teamBId], references: [id], onDelete: SetNull)
+  
+  nextMatch         Match?      @relation("MatchProgression", fields: [nextMatchId], references: [id], onDelete: SetNull)
+  previousMatches   Match[]     @relation("MatchProgression")
+  
+  predictions       Prediction[]
+
+  @@index([phase])
+  @@index([status])
+  @@index([matchDate])
+  @@index([teamAId])
+  @@index([teamBId])
+  @@index([nextMatchId])
+  @@index([isManualOverride])
+}
+
+enum MatchPhase {
+  GROUPS
+  ROUND_OF_32
+  ROUND_OF_16
+  QUARTERFINALS
+  SEMIFINALS
+  THIRD_PLACE
+  FINAL
+}
+
+enum MatchStatus {
+  PENDING
+  FINISHED
+}
+
+enum PhaseStatus {
+  LOCKED
+  OPEN_FOR_PREDICTIONS
+  LIVE
+  FINISHED
+}
+
+model PhaseConfiguration {
+  id        Int         @id @default(autoincrement())
+  phase     MatchPhase  @unique
+  status    PhaseStatus @default(LOCKED)
+  updatedAt DateTime    @updatedAt
+}
+
+model Prediction {
+  id               Int     @id @default(autoincrement())
+  userId           Int
+  matchId          Int
+  predictedScoreA  Int
+  predictedScoreB  Int
+  pointsEarned     Int     @default(0)
+  isCorrect        Boolean @default(false)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  user             User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  match            Match   @relation(fields: [matchId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, matchId])
+  @@index([userId])
+  @@index([matchId])
+}
+
+model BonusQuestion {
+  id               Int     @id @default(autoincrement())
+  question         String
+  correctAnswer    String?
+  category         String?
+  isActive         Boolean @default(true)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  bonusPredictions BonusPrediction[]
+
+  @@index([isActive])
+}
+
+model BonusPrediction {
+  id               Int     @id @default(autoincrement())
+  userId           Int
+  questionId       Int
+  selectedAnswer   String
+  pointsEarned     Int     @default(0)
+  isCorrect        Boolean @default(false)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  user             User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  question         BonusQuestion @relation(fields: [questionId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, questionId])
+  @@index([userId])
+  @@index([questionId])
+}
+
+model RefreshToken {
+  id        Int     @id @default(autoincrement())
+  userId    Int
+  token     String  @unique
+  expiresAt DateTime
+  revoked   Boolean @default(false)
+  createdAt DateTime @default(now())
+
+  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([token])
+}
+
+model AuditLog {
+  id          Int     @id @default(autoincrement())
+  userId      Int?
+  action      String
+  entityType  String?
+  entityId    Int?
+  changes     Json?
+  ipAddress   String?
+  userAgent   String?
+  createdAt   DateTime @default(now())
+
+  user        User?   @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([userId])
+  @@index([action])
+  @@index([createdAt])
+}
+
+model Puntos {
+  id              Int      @id @default(autoincrement())
+  acierto         Int      @default(5)
+  aciertoCompleto Int      @default(7)
+  pregunta        Int      @default(20)
+  updatedAt       DateTime @updatedAt
+}

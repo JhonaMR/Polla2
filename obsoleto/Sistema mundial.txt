@@ -1,0 +1,399 @@
+Documento Técnico
+Sistema de Mundial 2026 para Polla Mundialista
+1. OBJETIVO DEL SISTEMA
+
+El sistema debe permitir administrar y visualizar un Mundial 2026 completo con:
+
+Fase de grupos
+Clasificación automática
+Generación automática de llaves
+Eliminación directa
+Pronósticos de usuarios
+Administración manual de partidos
+Visualización dinámica tipo bracket
+
+El sistema debe ser híbrido:
+
+AUTOMÁTICO + EDITABLE
+
+La lógica automática nunca debe impedir modificaciones manuales realizadas desde el módulo administrativo.
+
+2. ESTRUCTURA DEL TORNEO
+Fase de grupos
+12 grupos
+4 equipos por grupo
+cada grupo juega todos contra todos
+
+Clasifican:
+
+Primer lugar de cada grupo → 12 equipos
+Segundo lugar de cada grupo → 12 equipos
+Mejores 8 terceros → 8 equipos
+
+Total clasificados:
+
+32 equipos
+3. FASES DEL TORNEO
+GROUPS
+↓
+ROUND_OF_32
+↓
+ROUND_OF_16
+↓
+QUARTERFINALS
+↓
+SEMIFINALS
+↓
+THIRD_PLACE
+↓
+FINAL
+4. CONCEPTO PRINCIPAL DEL SISTEMA
+
+El sistema funciona como un:
+
+ÁRBOL DE PARTIDOS
+
+Cada partido alimenta automáticamente otro partido.
+
+Ejemplo:
+
+Partido 49
+↓ ganador
+Partido 65
+↓ ganador
+Partido 73
+↓ ganador
+Semifinal
+5. ESTRUCTURA DE DATOS REQUERIDA
+
+Cada partido debe tener:
+
+interface Match {
+
+  id: number
+
+  phase: MatchPhase
+
+  matchNumber: number
+
+  teamAId: number | null
+  teamBId: number | null
+
+  scoreA: number | null
+  scoreB: number | null
+
+  winnerTeamId: number | null
+  loserTeamId: number | null
+
+  nextMatchId: number | null
+
+  nextMatchSlot: 'A' | 'B' | null
+
+  status:
+    | 'PENDING'
+    | 'LIVE'
+    | 'FINISHED'
+
+  isManualOverride: boolean
+
+  stadium?: string
+  kickoff?: Date
+}
+6. ENUM DE FASES
+enum MatchPhase {
+
+  GROUPS,
+
+  ROUND_OF_32,
+
+  ROUND_OF_16,
+
+  QUARTERFINALS,
+
+  SEMIFINALS,
+
+  THIRD_PLACE,
+
+  FINAL
+}
+7. CLASIFICACIÓN DESDE GRUPOS
+Regla general
+
+Después de finalizar todos los grupos:
+
+Se calculan posiciones
+Se ordenan terceros
+Se seleccionan los mejores 8 terceros
+Se generan automáticamente los cruces
+8. GENERACIÓN AUTOMÁTICA DE CRUCES
+El sistema debe:
+identificar clasificados
+generar emparejamientos
+llenar automáticamente los partidos
+mantener relaciones entre partidos
+9. LÓGICA DE AVANCE
+
+Cuando un partido termina:
+
+Se determina ganador
+↓
+Se guarda winnerTeamId
+↓
+El ganador avanza automáticamente
+↓
+Se llena el siguiente partido
+10. EJEMPLO DE AVANCE
+Partido actual
+{
+  id: 49,
+  nextMatchId: 65,
+  nextMatchSlot: 'A'
+}
+Si gana Brasil
+match65.teamAId = brasil.id
+11. REGLA FUNDAMENTAL
+AUTOMATIZACIÓN NO SIGNIFICA BLOQUEO
+
+El sistema debe generar automáticamente las llaves.
+
+PERO:
+
+El administrador puede modificar cualquier partido manualmente.
+
+12. SISTEMA DE MANUAL OVERRIDE
+
+Cada partido debe soportar:
+
+isManualOverride: boolean
+13. COMPORTAMIENTO DEL OVERRIDE
+Si:
+isManualOverride === false
+
+El sistema puede actualizar automáticamente el partido.
+
+Si:
+isManualOverride === true
+
+El sistema NO debe sobrescribir:
+
+equipos
+horarios
+estadios
+resultados
+
+aunque cambie la lógica automática.
+
+14. EJEMPLO DE CASO REAL
+
+Ejemplo FIFA:
+
+Cambio de estadio
+Cambio de horario
+Sanción
+Reorganización de llave
+Repetición de partido
+
+El administrador debe poder modificar todo manualmente.
+
+15. PARTIDOS DE ELIMINACIÓN
+ROUND OF 32
+
+16 partidos.
+
+Cada 2 partidos generan 1 partido de ROUND_OF_16.
+
+16. RELACIÓN ENTRE PARTIDOS
+Ejemplo
+49 y 50
+↓
+65
+
+Eso significa:
+
+ganador 49 → slot A de 65
+ganador 50 → slot B de 65
+17. ESTRUCTURA COMPLETA DEL BRACKET
+ROUND OF 32 → ROUND OF 16
+49 → 65A
+50 → 65B
+
+51 → 66A
+52 → 66B
+
+53 → 67A
+54 → 67B
+
+55 → 68A
+56 → 68B
+
+57 → 69A
+58 → 69B
+
+59 → 70A
+60 → 70B
+
+61 → 71A
+62 → 71B
+
+63 → 72A
+64 → 72B
+18. ROUND OF 16 → QUARTERFINALS
+65 → 73A
+66 → 73B
+
+67 → 74A
+68 → 74B
+
+69 → 75A
+70 → 75B
+
+71 → 76A
+72 → 76B
+19. QUARTERFINALS → SEMIFINALS
+73 → 77A
+74 → 77B
+
+75 → 78A
+76 → 78B
+20. SEMIFINALS → FINAL
+77 → 79A
+78 → 79B
+21. SEMIFINALS → THIRD PLACE
+
+Perdedores:
+
+77 loser → 80A
+78 loser → 80B
+22. FINAL
+Partido 79
+23. TERCER PUESTO
+Partido 80
+24. REGLA DE EMPATES
+
+En eliminación directa:
+
+NO puede existir empate final
+
+Debe existir:
+
+tiempo extra
+penales
+25. REGLAS DE FRONTEND
+El módulo de predicciones NO debe mostrar listas simples.
+
+Debe mostrarse como:
+
+BRACKET VISUAL
+26. VISUALIZACIÓN ESPERADA
+El layout debe mostrar:
+ROUND_OF_32
+ROUND_OF_16
+QUARTERFINALS
+SEMIFINALS
+FINAL
+
+en forma de:
+
+LLAVES
+27. COMPORTAMIENTO VISUAL
+
+Los encuentros deben llenarse automáticamente conforme existan ganadores.
+
+28. EQUIPOS PENDIENTES
+
+Si aún no existe clasificado:
+
+Mostrar TBD
+
+o:
+
+Por definir
+29. ORDEN DEL BRACKET
+
+El orden visual debe respetar el árbol de partidos.
+
+Ejemplo:
+
+P49 y P50 alimentan P65
+
+Visualmente deben estar conectados.
+
+30. EL FRONTEND NUNCA DEBE HARDCODEAR EQUIPOS
+
+Incorrecto:
+
+Brasil vs Argentina
+
+Correcto:
+
+winnerOf(49)
+vs
+winnerOf(50)
+31. REGLAS DEL MÓDULO ADMINISTRATIVO
+
+El módulo administrativo debe permitir:
+
+editar equipos
+cambiar horarios
+cambiar estadio
+modificar marcador
+modificar ganador
+mover partido de fase
+bloquear partido
+desbloquear partido
+rehacer cruces
+32. EL ADMINISTRADOR SIEMPRE TIENE PRIORIDAD
+
+La lógica automática nunca debe sobreescribir cambios manuales.
+
+33. SISTEMA DE SINCRONIZACIÓN
+
+Cuando termina un partido:
+
+Actualizar ganador
+↓
+Actualizar siguiente partido
+↓
+Actualizar bracket frontend
+↓
+Actualizar predicciones
+34. REGLA IMPORTANTE DE SEGURIDAD
+
+Nunca actualizar automáticamente un partido si:
+
+isManualOverride === true
+35. ALGORITMO GENERAL
+Flujo completo
+Fase de grupos termina
+↓
+Se calculan clasificados
+↓
+Se generan cruces
+↓
+Usuarios hacen predicciones
+↓
+Partidos terminan
+↓
+Ganadores avanzan automáticamente
+↓
+Bracket se actualiza
+↓
+Semifinales generan final y tercer puesto
+↓
+Campeón
+36. OBJETIVO FINAL DEL SISTEMA
+
+El sistema debe comportarse como:
+
+UN MOTOR DINÁMICO DE TORNEO
+
+No como una lista estática de partidos.
+
+Toda la lógica debe depender de:
+
+relaciones entre partidos
+ganadores
+flujo de clasificación
+árbol de eliminación
+
+Nunca de equipos escritos manualmente en frontend.

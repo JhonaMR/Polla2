@@ -1,0 +1,145 @@
+Fase de grupos:
+
+Partido 1: 11 de junio, 14:00 — México vs. Sudáfrica
+
+Partido 2: 11 de junio, 21:00 — Corea del Sur vs. República Checa
+
+Partido 3: 12 de junio, 14:00 — Canadá vs. Bosnia y Herzegovina
+
+Partido 4: 12 de junio, 20:00 — Estados Unidos vs. Paraguay
+
+Partido 5: 13 de junio, 14:00 — Catar vs. Suiza
+
+Partido 6: 13 de junio, 17:00 — Brasil vs. Marruecos
+
+Partido 7: 13 de junio, 20:00 — Haití vs. Escocia
+
+Partido 8: 13 de junio, 23:00 — Australia vs. Turquía
+
+Partido 9: 14 de junio, 12:00 — Alemania vs. Curazao
+
+Partido 10: 14 de junio, 15:00 — Países Bajos vs. Japón
+
+Partido 11: 14 de junio, 18:00 — Costa de Marfil vs. Ecuador
+
+Partido 12: 14 de junio, 21:00 — Suecia vs. Túnez
+
+Partido 13: 15 de junio, 11:00 — España vs. Cabo Verde
+
+Partido 14: 15 de junio, 14:00 — Bélgica vs. Egipto
+
+Partido 15: 15 de junio, 17:00 — Arabia Saudita vs. Uruguay
+
+Partido 16: 15 de junio, 20:00 — Irán vs. Nueva Zelanda
+
+Partido 17: 16 de junio, 14:00 — Francia vs. Senegal
+
+Partido 18: 16 de junio, 17:00 — Irak vs. Noruega
+
+Partido 19: 16 de junio, 20:00 — Argentina vs. Argelia
+
+Partido 20: 16 de junio, 23:00 — Austria vs. Jordania
+
+Partido 21: 17 de junio, 12:00 — Portugal vs. República Democrática del Congo
+
+Partido 22: 17 de junio, 15:00 — Inglaterra vs. Croacia
+
+Partido 23: 17 de junio, 18:00 — Ghana vs. Panamá
+
+Partido 24: 17 de junio, 21:00 — Uzbekistán vs. Colombia
+
+Partido 25: 18 de junio, 11:00 — República Checa vs. Sudáfrica
+
+Partido 26: 18 de junio, 14:00 — Suiza vs. Bosnia y Herzegovina
+
+Partido 27: 18 de junio, 17:00 — Canadá vs. Catar
+
+Partido 28: 18 de junio, 20:00 — México vs. Corea del Sur
+
+Partido 29: 19 de junio, 14:00 — Estados Unidos vs. Australia
+
+Partido 30: 19 de junio, 17:00 — Escocia vs. Marruecos
+
+Partido 31: 19 de junio, 19:30 — Brasil vs. Haití
+
+Partido 32: 19 de junio, 22:00 — Turquía vs. Paraguay
+
+Partido 33: 20 de junio, 12:00 — Países Bajos vs. Suecia
+
+Partido 34: 20 de junio, 15:00 — Alemania vs. Costa de Marfil
+
+Partido 35: 20 de junio, 19:00 — Ecuador vs. Curazao
+
+Partido 36: 20 de junio, 23:00 — Túnez vs. Japón
+
+Partido 37: 21 de junio, 11:00 — España vs. Arabia Saudita
+
+Partido 38: 21 de junio, 14:00 — Bélgica vs. Irán
+
+Partido 39: 21 de junio, 17:00 — Uruguay vs. Cabo Verde
+
+Partido 40: 21 de junio, 20:00 — Nueva Zelanda vs. Egipto
+
+Partido 41: 22 de junio, 12:00 — Argentina vs. Austria
+
+Partido 42: 22 de junio, 15:00 — Noruega vs. Senegal
+
+Partido 43: 22 de junio, 17:00 — Francia vs. Irak
+
+Partido 44: 22 de junio, 23:00 — Jordania vs. Argelia
+
+Partido 45: 23 de junio, 12:00 — Portugal vs. Uzbekistán
+
+Partido 46: 23 de junio, 15:00 — Inglaterra vs. Ghana
+
+Partido 47: 23 de junio, 18:00 — Panamá vs. Croacia
+
+Partido 48: 23 de junio, 21:00 — Colombia vs. República Democrática del Congo
+
+Partido 49: 24 de junio, 14:00 — República Checa vs. México
+
+Partido 50: 24 de junio, 14:00 — Sudáfrica vs. Corea del Sur
+
+Partido 51: 24 de junio, 19:00 — Suiza vs. Canadá
+
+Partido 52: 24 de junio, 19:00 — Bosnia y Herzegovina vs. Catar
+
+Partido 53: 24 de junio, 23:00 — Escocia vs. Brasil
+
+Partido 54: 24 de junio, 23:00 — Marruecos vs. Haití
+
+Partido 55: 25 de junio, 14:00 — Turquía vs. Estados Unidos
+
+Partido 56: 25 de junio, 14:00 — Paraguay vs. Australia
+
+Partido 57: 25 de junio, 19:00 — Ecuador vs. Alemania
+
+Partido 58: 25 de junio, 19:00 — Curazao vs. Costa de Marfil
+
+Partido 59: 25 de junio, 23:00 — Túnez vs. Países Bajos
+
+Partido 60: 25 de junio, 23:00 — Japón vs. Suecia
+
+Partido 61: 26 de junio, 14:00 — Uruguay vs. España
+
+Partido 62: 26 de junio, 14:00 — Cabo Verde vs. Arabia Saudita
+
+Partido 63: 26 de junio, 19:00 — Nueva Zelanda vs. Bélgica
+
+Partido 64: 26 de junio, 19:00 — Egipto vs. Irán
+
+Partido 65: 26 de junio, 23:00 — Noruega vs. Francia
+
+Partido 66: 26 de junio, 23:00 — Senegal vs. Irak
+
+Partido 67: 27 de junio, 14:00 — Argelia vs. Austria
+
+Partido 68: 27 de junio, 14:00 — Jordania vs. Argentina
+
+Partido 69: 27 de junio, 19:00 — Colombia vs. Portugal
+
+Partido 70: 27 de junio, 19:00 — República Democrática del Congo vs. Uzbekistán
+
+Partido 71: 27 de junio, 23:00 — Panamá vs. Inglaterra
+
+Partido 72: 27 de junio, 23:00 — Croacia vs. Ghana

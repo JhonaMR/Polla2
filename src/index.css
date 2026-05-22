@@ -1,0 +1,73 @@
+@import "tailwindcss";
+
+:root {
+  /* Tema oscuro por defecto */
+  --bg-background: #05070A;
+  --bg-card: #0F172A;
+  --bg-active: #1E293B;
+  --text-main: #E0E0E0;
+  --text-muted: #94A3B8;
+  --border-main: rgba(255, 255, 255, 0.1);
+  --bg-dots: rgba(255, 255, 255, 0.25);
+}
+
+:root.light {
+  /* Tema claro premium (gris slate suave y relajado, libre de blanco puro brillante) */
+  --bg-background: #E2E8F0;
+  --bg-card: #F8FAFC;
+  --bg-active: #EDF2F7;
+  --text-main: #0F172A;
+  --text-muted: #475569;
+  --border-main: rgba(15, 23, 42, 0.12);
+  --bg-dots: rgba(15, 23, 42, 0.14);
+
+  /* Suavizar la opacidad de sombras en modo claro */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.02);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.03), 0 2px 4px -2px rgba(0, 0, 0, 0.03);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.04), 0 4px 6px -4px rgba(0, 0, 0, 0.04);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.04), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
+  --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.06);
+}
+
+@theme {
+  --color-background: var(--bg-background);
+  --color-card: var(--bg-card);
+  --color-active: var(--bg-active);
+  --color-accent: #10B981;
+  --color-text-main: var(--text-main);
+  --color-text-muted: var(--text-muted);
+  --color-border-main: var(--border-main);
+  
+  --radius-bento: 1.5rem;
+  --radius-bento-xl: 2rem;
+}
+
+body {
+  background-color: var(--color-background);
+  background-image: radial-gradient(var(--bg-dots) 1px, transparent 1px);
+  background-size: 20px 20px;
+  color: var(--color-text-main);
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, background-image 0.3s ease;
+}
+
+/* Interceptores dinámicos para clases fijas de Tailwind en Modo Claro */
+html.light .border-white\/10,
+html.light .border-white\/5 {
+  border-color: var(--border-main) !important;
+}
+
+html.light .bg-white\/5,
+html.light .bg-white\/10 {
+  background-color: var(--bg-active) !important;
+}
+
+html.light .text-gray-400,
+html.light .text-gray-500 {
+  color: var(--text-muted) !important;
+}
+
+html.light .text-gray-600 {
+  color: var(--text-muted) !important;
+  opacity: 0.85;
+}
+

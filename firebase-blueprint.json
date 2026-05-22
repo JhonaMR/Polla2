@@ -1,0 +1,114 @@
+{
+  "entities": {
+    "User": {
+      "title": "User Profile",
+      "description": "User account information and competition statistics",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "description": "Firebase Auth UID" },
+        "email": { "type": "string", "description": "User email address" },
+        "displayName": { "type": "string", "description": "User full name" },
+        "role": { "type": "string", "enum": ["admin", "user"], "description": "User permission level" },
+        "points": { "type": "number", "description": "Total points earned in the competition" },
+        "position": { "type": "string", "description": "Player playing position (e.g. Forward, Midfielder)" }
+      },
+      "required": ["uid", "email", "role"]
+    },
+    "Team": {
+      "title": "Competing Team",
+      "description": "A national team or club participating in the competition",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "region": { "type": "string", "description": "Team's geographic region (e.g. Europe, South America)" },
+        "group": { "type": "string", "description": "Assigned group for the first phase" },
+        "logoUrl": { "type": "string" }
+      },
+      "required": ["id", "name", "region"]
+    },
+    "Match": {
+      "title": "Match fixture",
+      "description": "A scheduled match in the tournament",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "phase": { "type": "string", "enum": ["groups", "cuadrant", "semifinal", "final"] },
+        "teamAId": { "type": "string" },
+        "teamBId": { "type": "string" },
+        "scoreA": { "type": "number" },
+        "scoreB": { "type": "number" },
+        "status": { "type": "string", "enum": ["pending", "finished"] },
+        "date": { "type": "string", "format": "date-time" },
+        "matchNumber": { "type": "number" }
+      },
+      "required": ["id", "phase", "matchNumber"]
+    },
+    "Prediction": {
+      "title": "User Prediction",
+      "description": "A prediction made by a user for a specific match",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "userId": { "type": "string" },
+        "matchId": { "type": "string" },
+        "predictedScoreA": { "type": "number" },
+        "predictedScoreB": { "type": "number" },
+        "pointsEarned": { "type": "number" },
+        "isCorrect": { "type": "boolean" }
+      },
+      "required": ["userId", "matchId", "predictedScoreA", "predictedScoreB"]
+    },
+    "BonusQuestion": {
+      "title": "Special Prediction",
+      "description": "Additional predictions like top scorer or tournament winner",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "question": { "type": "string" },
+        "options": { "type": "array", "description": "Available choices for the question" },
+        "correctAnswer": { "type": "string" }
+      },
+      "required": ["id", "question"]
+    },
+    "BonusPrediction": {
+      "title": "User Bonus Prediction",
+      "description": "User choice for a special prediction",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "userId": { "type": "string" },
+        "questionId": { "type": "string" },
+        "selectedAnswer": { "type": "string" },
+        "pointsEarned": { "type": "number" }
+      },
+      "required": ["userId", "questionId", "selectedAnswer"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "User profile data"
+    },
+    "/teams/{teamId}": {
+      "schema": "Team",
+      "description": "Participating teams"
+    },
+    "/matches/{matchId}": {
+      "schema": "Match",
+      "description": "Tournament matches"
+    },
+    "/predictions/{predictionId}": {
+      "schema": "Prediction",
+      "description": "User match predictions"
+    },
+    "/bonus_questions/{questionId}": {
+      "schema": "BonusQuestion",
+      "description": "Special questions for extra points"
+    },
+    "/bonus_predictions/{predictionId}": {
+      "schema": "BonusPrediction",
+      "description": "User bonus question answers"
+    }
+  }
+}

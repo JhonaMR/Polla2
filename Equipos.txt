@@ -1,0 +1,119 @@
+Grupo A
+
+    México, CONCACAF, Grupo A, https://flagcdn.com/w320/mx.png
+
+    Sudáfrica, CAF, Grupo A, https://flagcdn.com/w320/za.png
+
+    Corea del Sur, AFC, Grupo A, https://flagcdn.com/w320/kr.png
+
+    República Checa, UEFA, Grupo A, https://flagcdn.com/w320/cz.png
+
+Grupo B
+
+    Canadá, CONCACAF, Grupo B, https://flagcdn.com/w320/ca.png
+
+    Bosnia y Herzegovina, UEFA, Grupo B, https://flagcdn.com/w320/ba.png
+
+    Catar, AFC, Grupo B, https://flagcdn.com/w320/qa.png
+
+    Suiza, UEFA, Grupo B, https://flagcdn.com/w320/ch.png
+
+Grupo C
+
+    Brasil, CONMEBOL, Grupo C, https://flagcdn.com/w320/br.png
+
+    Marruecos, CAF, Grupo C, https://flagcdn.com/w320/ma.png
+
+    Haití, CONCACAF, Grupo C, https://flagcdn.com/w320/ht.png
+
+    Escocia, UEFA, Grupo C, https://flagcdn.com/w320/gb-sct.png
+
+Grupo D
+
+    Estados Unidos, CONCACAF, Grupo D, https://flagcdn.com/w320/us.png
+
+    Paraguay, CONMEBOL, Grupo D, https://flagcdn.com/w320/py.png
+
+    Australia, AFC, Grupo D, https://flagcdn.com/w320/au.png
+
+    Turquía, UEFA, Grupo D, https://flagcdn.com/w320/tr.png
+
+Grupo E
+
+    Alemania, UEFA, Grupo E, https://flagcdn.com/w320/de.png
+
+    Curazao, CONCACAF, Grupo E, https://flagcdn.com/w320/cw.png
+
+    Costa de Marfil, CAF, Grupo E, https://flagcdn.com/w320/ci.png
+
+    Ecuador, CONMEBOL, Grupo E, https://flagcdn.com/w320/ec.png
+
+Grupo F
+
+    Países Bajos, UEFA, Grupo F, https://flagcdn.com/w320/nl.png
+
+    Japón, AFC, Grupo F, https://flagcdn.com/w320/jp.png
+
+    Suecia, UEFA, Grupo F, https://flagcdn.com/w320/se.png
+
+    Túnez, CAF, Grupo F, https://flagcdn.com/w320/tn.png
+
+Grupo G
+
+    Bélgica, UEFA, Grupo G, https://flagcdn.com/w320/be.png
+
+    Egipto, CAF, Grupo G, https://flagcdn.com/w320/eg.png
+
+    Irán, AFC, Grupo G, https://flagcdn.com/w320/ir.png
+
+    Nueva Zelanda, OFC, Grupo G, https://flagcdn.com/w320/nz.png
+
+Grupo H
+
+    España, UEFA, Grupo H, https://flagcdn.com/w320/es.png
+
+    Uruguay, CONMEBOL, Grupo H, https://flagcdn.com/w320/uy.png
+
+    Cabo Verde, CAF, Grupo H, https://flagcdn.com/w320/cv.png
+
+    Arabia Saudita, AFC, Grupo H, https://flagcdn.com/w320/sa.png
+
+Grupo I
+
+    Francia, UEFA, Grupo I, https://flagcdn.com/w320/fr.png
+
+    Noruega, UEFA, Grupo I, https://flagcdn.com/w320/no.png
+
+    Senegal, CAF, Grupo I, https://flagcdn.com/w320/sn.png
+
+    Irak, AFC, Grupo I, https://flagcdn.com/w320/iq.png
+
+Grupo J
+
+    Argentina, CONMEBOL, Grupo J, https://flagcdn.com/w320/ar.png
+
+    Austria, UEFA, Grupo J, https://flagcdn.com/w320/at.png
+
+    Argelia, CAF, Grupo J, https://flagcdn.com/w320/dz.png
+
+    Jordania, AFC, Grupo J, https://flagcdn.com/w320/jo.png
+
+Grupo K
+
+    Portugal, UEFA, Grupo K, https://flagcdn.com/w320/pt.png
+
+    Colombia, CONMEBOL, Grupo K, https://flagcdn.com/w320/co.png
+
+    República Democrática del Congo, CAF, Grupo K, https://flagcdn.com/w320/cd.png
+
+    Uzbekistán, AFC, Grupo K, https://flagcdn.com/w320/uz.png
+
+Grupo L
+
+    Inglaterra, UEFA, Grupo L, https://flagcdn.com/w320/gb-eng.png
+
+    Croatia, UEFA, Grupo L, https://flagcdn.com/w320/hr.png
+
+    Ghana, CAF, Grupo L, https://flagcdn.com/w320/gh.png
+
+    Panamá, CONCACAF, Grupo L, https://flagcdn.com/w320/pa.png

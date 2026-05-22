@@ -1,0 +1,101 @@
+================================================================================
+                        SETUP - SISTEMA PICKEM
+================================================================================
+
+PASO 1: CREAR BASE DE DATOS
+────────────────────────────
+
+Opción A - Ejecutar script (Windows):
+  1. Abrir terminal en: backend/
+  2. Ejecutar: init-db.bat
+  3. Esperar a que termine
+
+Opción B - Manual:
+  1. Abrir pgAdmin
+  2. Conectar a localhost:5555
+  3. Crear BD: PickEm
+  4. Ejecutar: backend/setup-db.sql
+  5. Ejecutar: backend/seed-data.sql
+
+PASO 2: INSTALAR DEPENDENCIAS BACKEND
+──────────────────────────────────────
+
+  1. Abrir terminal en: backend/
+  2. Ejecutar: npm install
+  3. Esperar a que termine
+
+PASO 3: INSTALAR DEPENDENCIAS FRONTEND
+───────────────────────────────────────
+
+  1. Abrir terminal en: raíz del proyecto
+  2. Ejecutar: npm install
+  3. Esperar a que termine
+
+PASO 4: INICIAR BACKEND
+───────────────────────
+
+Opción A - Script (Windows):
+  1. Abrir terminal en: backend/
+  2. Ejecutar: start-dev.bat
+
+Opción B - Manual:
+  1. Abrir terminal en: backend/
+  2. Ejecutar: npm run dev
+  3. Deberías ver: ✓ Server running on http://localhost:3001
+
+PASO 5: INICIAR FRONTEND
+────────────────────────
+
+Opción A - Script (Windows):
+  1. Abrir terminal en: raíz del proyecto
+  2. Ejecutar: start-frontend.bat
+
+Opción B - Manual:
+  1. Abrir terminal en: raíz del proyecto
+  2. Ejecutar: npm run dev
+  3. Deberías ver: ✓ Local: http://localhost:3000
+
+PASO 6: ACCEDER AL SISTEMA
+──────────────────────────
+
+  1. Abrir navegador: http://localhost:3000
+  2. Login con:
+     Usuario: SOP
+     Contraseña: 2114
+
+================================================================================
+                          CREDENCIALES
+================================================================================
+
+Usuario Admin:
+  Username: SOP
+  Password: 2114
+
+================================================================================
+                          PUERTOS
+================================================================================
+
+Frontend:  http://localhost:3000
+Backend:   http://localhost:3001
+Database:  localhost:5555
+
+================================================================================
+                          TROUBLESHOOTING
+================================================================================
+
+Error: "connect ECONNREFUSED 127.0.0.1:5555"
+  → PostgreSQL no está corriendo en puerto 5555
+  → Iniciar PostgreSQL
+
+Error: "database PickEm does not exist"
+  → Ejecutar: backend/init-db.bat
+
+Error: "CORS error"
+  → Verificar que backend está en puerto 3001
+  → Reiniciar ambos servidores
+
+Error: "Invalid credentials"
+  → Usuario: SOP
+  → Contraseña: 2114
+
+================================================================================

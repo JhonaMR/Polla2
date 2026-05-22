@@ -1,0 +1,188 @@
+╔════════════════════════════════════════════════════════════════════════════╗
+║                                                                            ║
+║                    🚀 QUICK START - SISTEMA PICKEM 🚀                     ║
+║                                                                            ║
+║                         FIFA Corporate World Cup Pool                      ║
+║                                                                            ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+┌────────────────────────────────────────────────────────────────────────────┐
+│ REQUISITOS                                                                 │
+├────────────────────────────────────────────────────────────────────────────┤
+│ ✓ PostgreSQL 12+ en puerto 5555                                            │
+│ ✓ Node.js 18+                                                              │
+│ ✓ npm o yarn                                                               │
+└────────────────────────────────────────────────────────────────────────────┘
+
+┌────────────────────────────────────────────────────────────────────────────┐
+│ PASO 1: CREAR BASE DE DATOS (5 minutos)                                   │
+├────────────────────────────────────────────────────────────────────────────┤
+│                                                                            │
+│ Opción A - Terminal:                                                       │
+│   psql -U postgres -h localhost -p 5555                                    │
+│   CREATE DATABASE "PickEm";                                                │
+│   \q                                                                       │
+│                                                                            │
+│ Opción B - pgAdmin:                                                        │
+│   1. Conectar a localhost:5555                                             │
+│   2. Click derecho en Databases → Create → Database                        │
+│   3. Nombre: PickEm                                                        │
+│   4. Save                                                                  │
+│                                                                            │
+└────────────────────────────────────────────────────────────────────────────┘
+
+┌────────────────────────────────────────────────────────────────────────────┐
+│ PASO 2: CREAR TABLAS (2 minutos)                                          │
+├────────────────────────────────────────────────────────────────────────────┤
+│                                                                            │
+│ Terminal:                                                                  │
+│   psql -U postgres -h localhost -p 5555 -d PickEm -f backend/setup-db.sql │
+│                                                                            │
+│ O en pgAdmin:                                                              │
+│   1. Seleccionar BD PickEm                                                 │
+│   2. Query Tool                                                            │
+│   3. Copiar backend/setup-db.sql                                           │
+│   4. Ejecutar                                                              │
+│                                                                            │
+└────────────────────────────────────────────────────────────────────────────┘
+
+┌────────────────────────────────────────────────────────────────────────────┐
+│ PASO 3: GENERAR HASH (1 minuto)                                           │
+├────────────────────────────────────────────────────────────────────────────┤
+│                                                                            │
+│ Terminal:                                                                  │
+│   cd backend                                                               │
+│   npm install                                                              │
+│   node generate-hash.js                                                    │
+│                                                                            │
+│ Copiar el hash generado (comienza con $2a$10$)                             │
+│                                                                            │
+└────────────────────────────────────────────────────────────────────────────┘
+
+┌────────────────────────────────────────────────────────────────────────────┐
+│ PASO 4: INSERTAR DATOS (2 minutos)                                        │
+├────────────────────────────────────────────────────────────────────────────┤
+│                                                                            │
+│ 1. Abrir: backend/seed-data.sql                                            │
+│ 2. Reemplazar: $2a$10$YourHashedPasswordHere...                            │
+│    Con el hash del PASO 3                                                  │
+│ 3. Ejecutar en terminal:                                                   │
+│    psql -U postgres -h localhost -p 5555 -d PickEm -f backend/seed-data.sql│
+│                                                                            │
+└────────────────────────────────────────────────────────────────────────────┘
+
+┌────────────────────────────────────────────────────────────────────────────┐
+│ PASO 5: INICIAR BACKEND (2 minutos)                                       │
+├────────────────────────────────────────────────────────────────────────────┤
+│                                                                            │
+│ Terminal 1:                                                                │
+│   cd backend                                                               │
+│   npm run dev                                                              │
+│                                                                            │
+│ Deberías ver:                                                              │
+│   ✓ Database connected successfully                                        │
+│   ✓ Server running on http://localhost:3001                               │
+│                                                                            │
+└────────────────────────────────────────────────────────────────────────────┘
+
+┌────────────────────────────────────────────────────────────────────────────┐
+│ PASO 6: INICIAR FRONTEND (2 minutos)                                      │
+├────────────────────────────────────────────────────────────────────────────┤
+│                                                                            │
+│ Terminal 2 (en raíz del proyecto):                                         │
+│   npm install                                                              │
+│   npm run dev                                                              │
+│                                                                            │
+│ Deberías ver:                                                              │
+│   ✓ Local: http://localhost:3000                                           │
+│                                                                            │
+└────────────────────────────────────────────────────────────────────────────┘
+
+┌────────────────────────────────────────────────────────────────────────────┐
+│ PASO 7: ACCEDER AL SISTEMA (1 minuto)                                     │
+├────────────────────────────────────────────────────────────────────────────┤
+│                                                                            │
+│ 1. Abrir: http://localhost:3000                                            │
+│ 2. Login con:                                                              │
+│    Usuario: SOP                                                            │
+│    Contraseña: Admin123!                                                   │
+│ 3. ¡Listo!                                                                 │
+│                                                                            │
+└────────────────────────────────────────────────────────────────────────────┘
+
+╔════════════════════════════════════════════════════════════════════════════╗
+║                                                                            ║
+║                         ✅ SISTEMA LISTO PARA USAR                        ║
+║                                                                            ║
+║                    Tiempo total: 15-20 minutos                             ║
+║                                                                            ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+┌────────────────────────────────────────────────────────────────────────────┐
+│ FUNCIONALIDADES DISPONIBLES                                                │
+├────────────────────────────────────────────────────────────────────────────┤
+│ ✓ Dashboard con ranking                                                    │
+│ ✓ Predicciones de partidos                                                 │
+│ ✓ Preguntas bonus                                                          │
+│ ✓ Gestión de equipos                                                       │
+│ ✓ Estadísticas personales                                                  │
+│ ✓ Panel de administración                                                  │
+│ ✓ Autenticación JWT                                                        │
+│ ✓ Registro de usuarios                                                     │
+└────────────────────────────────────────────────────────────────────────────┘
+
+┌────────────────────────────────────────────────────────────────────────────┐
+│ URLS IMPORTANTES                                                           │
+├────────────────────────────────────────────────────────────────────────────┤
+│ Frontend:        http://localhost:3000                                     │
+│ Backend API:     http://localhost:3001/api                                 │
+│ Health Check:    http://localhost:3001/api/health                          │
+└────────────────────────────────────────────────────────────────────────────┘
+
+┌────────────────────────────────────────────────────────────────────────────┐
+│ DATOS DE PRUEBA                                                            │
+├────────────────────────────────────────────────────────────────────────────┤
+│ Usuario: SOP                                                               │
+│ Contraseña: Admin123!                                                      │
+│ Rol: ADMIN                                                                 │
+│                                                                            │
+│ Equipos: 8 (Argentina, France, Germany, Brazil, Spain, England,           │
+│           Netherlands, Belgium)                                            │
+│ Partidos: 2 (Argentina vs France, Germany vs Brazil)                       │
+│ Preguntas Bonus: 3                                                         │
+└────────────────────────────────────────────────────────────────────────────┘
+
+┌────────────────────────────────────────────────────────────────────────────┐
+│ TROUBLESHOOTING                                                            │
+├────────────────────────────────────────────────────────────────────────────┤
+│ Error: "connect ECONNREFUSED"                                              │
+│   → PostgreSQL no está en puerto 5555                                      │
+│   → Iniciar PostgreSQL en puerto 5555                                      │
+│                                                                            │
+│ Error: "database PickEm does not exist"                                    │
+│   → BD no fue creada                                                       │
+│   → Ejecutar: CREATE DATABASE "PickEm";                                    │
+│                                                                            │
+│ Error: "CORS error"                                                        │
+│   → Backend no está en puerto 3001                                         │
+│   → Reiniciar ambos servidores                                             │
+│                                                                            │
+│ Error: "Invalid credentials"                                               │
+│   → Usuario o contraseña incorrectos                                       │
+│   → Verificar que SOP existe en BD                                         │
+│                                                                            │
+└────────────────────────────────────────────────────────────────────────────┘
+
+╔════════════════════════════════════════════════════════════════════════════╗
+║                                                                            ║
+║                    Para más información, consulta:                         ║
+║                                                                            ║
+║                    • EJECUTAR_SISTEMA.md                                   ║
+║                    • CHECKLIST_VERIFICACION.md                             ║
+║                    • RESUMEN_IMPLEMENTACION.txt                            ║
+║                                                                            ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+Versión: 1.0.0
+Fecha: 2026-05-20
+Estado: ✅ LISTO PARA EJECUTAR
