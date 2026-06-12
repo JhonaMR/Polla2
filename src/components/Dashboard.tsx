@@ -369,13 +369,26 @@ export default function Dashboard() {
 
     allMatches.forEach((m) => {
       if (m.status === "FINISHED") {
-        if (m.winnerTeamId) {
-          if (!stats[m.winnerTeamId]) stats[m.winnerTeamId] = { id: m.winnerTeamId, wins: 0, losses: 0 };
-          stats[m.winnerTeamId].wins += 1;
+        let winnerId: number | null = m.winnerTeamId || null;
+        let loserId: number | null = m.loserTeamId || null;
+
+        if (!winnerId && !loserId && m.scoreA !== null && m.scoreA !== undefined && m.scoreB !== null && m.scoreB !== undefined) {
+          if (m.scoreA > m.scoreB) {
+            winnerId = m.teamAId;
+            loserId = m.teamBId;
+          } else if (m.scoreB > m.scoreA) {
+            winnerId = m.teamBId;
+            loserId = m.teamAId;
+          }
         }
-        if (m.loserTeamId) {
-          if (!stats[m.loserTeamId]) stats[m.loserTeamId] = { id: m.loserTeamId, wins: 0, losses: 0 };
-          stats[m.loserTeamId].losses += 1;
+
+        if (winnerId) {
+          if (!stats[winnerId]) stats[winnerId] = { id: winnerId, wins: 0, losses: 0 };
+          stats[winnerId].wins += 1;
+        }
+        if (loserId) {
+          if (!stats[loserId]) stats[loserId] = { id: loserId, wins: 0, losses: 0 };
+          stats[loserId].losses += 1;
         }
       }
     });
