@@ -1590,71 +1590,38 @@ function AdminInput({ label, value, onChange, placeholder }: { label: string, va
 
 // 6. Points Manager
 function PointsManager() {
-  const [acierto, setAcierto] = useState<string>("5");
-  const [aciertoCompleto, setAciertoCompleto] = useState<string>("7");
-  const [pregunta, setPregunta] = useState<string>("20");
-  const [loading, setLoading] = useState(true);
-  const [saving, setSaving] = useState(false);
+  const [recalculating, setRecalculating] = useState(false);
   const [message, setMessage] = useState<{ text: string; type: "success" | "error" } | null>(null);
 
-  const fetchPointsConfig = async () => {
-    try {
-      setLoading(true);
-      const res = await adminService.getPointsConfig();
-      const config = res.data.data;
-      if (config) {
-        setAcierto(config.acierto.toString());
-        setAciertoCompleto(config.aciertoCompleto.toString());
-        setPregunta(config.pregunta.toString());
-      }
-    } catch (err) {
-      console.error("Error loading points config:", err);
-      setMessage({ text: "Error al cargar la configuración de puntos", type: "error" });
-    } finally {
-      setLoading(false);
+  const handleRecalculate = async () => {
+    if (!window.confirm("¿Está seguro de recalcular todas las puntuaciones? Esto re-evaluará todos los partidos finalizados bajo el nuevo sistema por fases y actualizará la clasificación global.")) {
+      return;
     }
-  };
-
-  useEffect(() => {
-    fetchPointsConfig();
-  }, []);
-
-  const handleSave = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setSaving(true);
+    setRecalculating(true);
     setMessage(null);
     try {
-      const payload = {
-        acierto: parseInt(acierto, 10),
-        aciertoCompleto: parseInt(aciertoCompleto, 10),
-        pregunta: parseInt(pregunta, 10),
-      };
-      if (isNaN(payload.acierto) || isNaN(payload.aciertoCompleto) || isNaN(payload.pregunta)) {
-        throw new Error("Todos los valores deben ser números válidos");
-      }
-      await adminService.updatePointsConfig(payload);
-      setMessage({ text: "Configuración de puntos actualizada correctamente", type: "success" });
+      const res = await adminService.calculateScores();
+      setMessage({ 
+        text: `¡Puntuaciones recalculadas con éxito! Se procesaron ${res.data.data?.matchesProcessed || 0} partidos y ${res.data.data?.bonusProcessed || 0} preguntas bonus.`, 
+        type: "success" 
+      });
     } catch (err: any) {
-      console.error("Error saving points config:", err);
-      const errMsg = err.response?.data?.message || err.message || "Error al actualizar la configuración";
+      console.error("Error recalculating scores:", err);
+      const errMsg = err.response?.data?.message || "Error al recalcular las puntuaciones.";
       setMessage({ text: errMsg, type: "error" });
     } finally {
-      setSaving(false);
+      setRecalculating(false);
     }
   };
 
-  if (loading) {
-    return <div className="text-center py-20 text-gray-500 font-black">Cargando configuración de puntos...</div>;
-  }
-
   return (
-    <div className="max-w-2xl mx-auto bg-card border border-white/10 rounded-[2.5rem] p-8 shadow-2xl">
+    <div className="max-w-2xl mx-auto bg-card border border-white/10 rounded-[2.5rem] p-8 shadow-2xl space-y-8">
       <div className="mb-6">
         <h3 className="text-lg font-black italic uppercase tracking-tighter mb-2 flex items-center gap-2">
           <Trophy size={20} className="text-accent" /> Configuración de Puntos
         </h3>
         <p className="text-xs text-gray-500 font-bold uppercase tracking-wider">
-          Ajuste dinámicamente los puntos otorgados por cada tipo de acierto y predicción de bonus.
+          Visualización del sistema de puntuación estructurado por fases y control de recálculo global.
         </p>
       </div>
 
@@ -1671,61 +1638,59 @@ function PointsManager() {
         </div>
       )}
 
-      <form onSubmit={handleSave} className="space-y-6">
-        <div className="space-y-4">
-          <div className="p-4 bg-white/5 rounded-2xl border border-white/5 space-y-2">
-            <AdminInput 
-              label="Acierto Simple (Ganador o Empate)" 
-              value={acierto} 
-              onChange={setAcierto} 
-              placeholder="Ej. 5" 
-            />
-            <p className="text-[9px] text-gray-500 font-bold uppercase tracking-widest px-1">
-              Puntos por predecir correctamente el ganador o el empate, sin acertar los goles exactos.
-            </p>
-          </div>
+      {/* Tabla resumen del sistema de puntos */}
+      <div className="border border-white/5 rounded-2xl overflow-hidden bg-active/25">
+        <table className="w-full text-xs text-left">
+          <thead>
+            <tr className="border-b border-white/10 text-[9px] font-black text-gray-500 uppercase tracking-widest bg-active/40">
+              <th className="py-3 px-4">Fase del Torneo</th>
+              <th className="py-3 px-4 text-center">Acierto Simple (Ganador/Empate)</th>
+              <th className="py-3 px-4 text-center">Acierto Completo (Marcador Exacto)</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-white/5 font-bold uppercase text-[10px]">
+            <tr>
+              <td className="py-3.5 px-4 text-text-main italic">Fase de Grupos</td>
+              <td className="py-3.5 px-4 text-center text-accent">2 Puntos</td>
+              <td className="py-3.5 px-4 text-center text-accent">5 Puntos</td>
+            </tr>
+            <tr>
+              <td className="py-3.5 px-4 text-text-main italic">Eliminatorias (Dieciseisavos, Octavos, Cuartos)</td>
+              <td className="py-3.5 px-4 text-center text-accent">5 Puntos</td>
+              <td className="py-3.5 px-4 text-center text-accent">8 Puntos</td>
+            </tr>
+            <tr>
+              <td className="py-3.5 px-4 text-text-main italic">Semifinal, 3er Puesto y Final</td>
+              <td className="py-3.5 px-4 text-center text-accent">5 Puntos</td>
+              <td className="py-3.5 px-4 text-center text-accent">10 Puntos</td>
+            </tr>
+            <tr className="bg-active/20">
+              <td className="py-3.5 px-4 text-text-main italic">Preguntas Bonus (Todas)</td>
+              <td className="py-3.5 px-4 text-center text-accent" colSpan={2}>20 Puntos por Acierto</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
 
-          <div className="p-4 bg-white/5 rounded-2xl border border-white/5 space-y-2">
-            <AdminInput 
-              label="Acierto Completo (Marcador Exacto)" 
-              value={aciertoCompleto} 
-              onChange={setAciertoCompleto} 
-              placeholder="Ej. 7" 
-            />
-            <p className="text-[9px] text-gray-500 font-bold uppercase tracking-widest px-1">
-              Puntos otorgados cuando se acierta exactamente la cantidad de goles de ambos equipos.
-            </p>
-          </div>
+      <div className="bg-yellow-500/10 border border-yellow-500/20 text-yellow-500 rounded-xl p-4 text-[9px] font-bold uppercase tracking-wider leading-relaxed">
+        ⚠️ ATENCIÓN: Si has realizado modificaciones en las predicciones de los usuarios, o si has actualizado las reglas de puntos, presiona el botón inferior para recalcular el puntaje de todos los participantes. Esto re-evaluará todos los encuentros jugados.
+      </div>
 
-          <div className="p-4 bg-white/5 rounded-2xl border border-white/5 space-y-2">
-            <AdminInput 
-              label="Pregunta Bonus" 
-              value={pregunta} 
-              onChange={setPregunta} 
-              placeholder="Ej. 20" 
-            />
-            <p className="text-[9px] text-gray-500 font-bold uppercase tracking-widest px-1">
-              Puntos otorgados al acertar la respuesta correcta oficial en las preguntas bonus.
-            </p>
-          </div>
-        </div>
-
-        <button 
-          type="submit" 
-          disabled={saving}
-          className="w-full bg-accent text-black font-black uppercase italic tracking-widest py-4 rounded-xl shadow-lg shadow-accent/10 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:pointer-events-none"
-        >
-          {saving ? (
-            <>
-              <RefreshCw size={14} className="animate-spin" /> Guardando...
-            </>
-          ) : (
-            <>
-              <Save size={14} /> Guardar Configuración
-            </>
-          )}
-        </button>
-      </form>
+      <button 
+        onClick={handleRecalculate}
+        disabled={recalculating}
+        className="w-full bg-accent text-black font-black uppercase italic tracking-widest py-4 rounded-xl shadow-lg shadow-accent/10 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:pointer-events-none"
+      >
+        {recalculating ? (
+          <>
+            <RefreshCw size={14} className="animate-spin" /> Recalculando...
+          </>
+        ) : (
+          <>
+            <RefreshCw size={14} /> Recalcular Puntuaciones Globales
+          </>
+        )}
+      </button>
     </div>
   );
 }

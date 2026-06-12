@@ -50,20 +50,12 @@ export class BonusController {
       const { questionId, selectedAnswer } = (req.body as any);
       const userId = req.user.id;
 
-      // Check if tournament first match starts in less than 15 minutes
-      const firstMatch = await prisma.match.findFirst({
-        where: { phase: 'GROUPS' },
-        orderBy: { matchDate: 'asc' },
-      });
+      // Check lock deadline: June 15, 2026 at 23:59:59 local time (GMT-5)
+      const deadline = new Date('2026-06-15T23:59:59-05:00');
+      const now = new Date();
 
-      if (firstMatch) {
-        const now = new Date();
-        const firstMatchTime = new Date(firstMatch.matchDate);
-        const fifteenMinutes = 15 * 60 * 1000;
-
-        if (firstMatchTime.getTime() - now.getTime() < fifteenMinutes) {
-          throw new AppError('Su elección está bloqueada, no es posible editar su elección para este encuentro', 400);
-        }
+      if (now > deadline) {
+        throw new AppError('Su elección está bloqueada, no es posible editar su elección para este encuentro', 400);
       }
 
       const question = await prisma.bonusQuestion.findUnique({

@@ -442,26 +442,14 @@ export class AdminController {
         where: { matchId },
       });
 
-      const pointsConfig = await pointsService.getConfig();
-
       for (const prediction of predictions) {
-        let pointsEarned = 0;
-        let isCorrect = false;
-
-        // Exact score match
-        if (prediction.predictedScoreA === scoreA && prediction.predictedScoreB === scoreB) {
-          pointsEarned = pointsConfig.aciertoCompleto;
-          isCorrect = true;
-        }
-        // Correct winner
-        else if (
-          (scoreA > scoreB && prediction.predictedScoreA > prediction.predictedScoreB) ||
-          (scoreA < scoreB && prediction.predictedScoreA < prediction.predictedScoreB) ||
-          (scoreA === scoreB && prediction.predictedScoreA === prediction.predictedScoreB)
-        ) {
-          pointsEarned = pointsConfig.acierto;
-          isCorrect = true;
-        }
+        const { pointsEarned, isCorrect } = pointsService.getPointsForMatch(
+          updatedMatch.phase,
+          prediction.predictedScoreA,
+          prediction.predictedScoreB,
+          scoreA,
+          scoreB
+        );
 
         // Update prediction
         await prisma.prediction.update({
@@ -768,17 +756,32 @@ export class AdminController {
       let totalPointsDistributed = 0;
 
       for (const match of finishedMatches) {
+        if (match.scoreA === null || match.scoreB === null) continue;
         for (const prediction of match.predictions) {
-          if (prediction.isCorrect) {
+          const { pointsEarned, isCorrect } = pointsService.getPointsForMatch(
+            match.phase,
+            prediction.predictedScoreA,
+            prediction.predictedScoreB,
+            match.scoreA,
+            match.scoreB
+          );
+
+          // Update prediction points in database to match new rules
+          await prisma.prediction.update({
+            where: { id: prediction.id },
+            data: { pointsEarned, isCorrect },
+          });
+
+          if (isCorrect) {
             await prisma.user.update({
               where: { id: prediction.userId },
               data: {
                 points: {
-                  increment: prediction.pointsEarned,
+                  increment: pointsEarned,
                 },
               },
             });
-            totalPointsDistributed += prediction.pointsEarned;
+            totalPointsDistributed += pointsEarned;
           }
         }
       }

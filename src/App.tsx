@@ -2,12 +2,12 @@ import React from "react";
 import { BrowserRouter, Routes, Route, Navigate, Link } from "react-router-dom";
 import { AuthProvider, useAuth } from "./lib/AuthContext";
 import { auth } from "./lib/firebase";
-import { 
-  Trophy, 
-  Map, 
-  LayoutDashboard, 
-  Settings, 
-  User as UserIcon, 
+import {
+  Trophy,
+  Map,
+  LayoutDashboard,
+  Settings,
+  User as UserIcon,
   LogOut,
   ChevronRight,
   ClipboardList,
@@ -24,10 +24,11 @@ import BonusQuestions from "./components/BonusQuestions";
 import RegionsView from "./components/RegionsView";
 import AdminPanel from "./components/AdminPanel";
 import Login from "./components/Login";
+import Rules from "./components/Rules";
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
   const { profile, isAdmin, logout } = useAuth();
-  
+
   // Estado para controlar el tema (light o dark) con persistencia
   const [theme, setTheme] = React.useState<"light" | "dark">(() => {
     return (localStorage.getItem("theme") as "light" | "dark") || "dark";
@@ -56,7 +57,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
             Corporate Champions <span className="text-accent">Pool</span>
           </h1>
         </div>
-        
+
         <nav className="hidden md:flex gap-6 text-xs font-bold tracking-widest uppercase items-center">
           <NavLink to="/" label="Dashboard" />
           <NavLink to="/tournament" label="Eliminatorias" />
@@ -64,6 +65,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
           <NavLink to="/leaderboard" label="Clasificación" />
           <NavLink to="/bonus" label="Bonus" />
           <NavLink to="/regions" label="Regiones" />
+          <NavLink to="/rules" label="Cómo Jugar" />
           {isAdmin && <NavLink to="/admin" label="Soporte" className="text-yellow-500" />}
         </nav>
 
@@ -87,11 +89,11 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
           </div>
           <div className="group relative">
             <div className="w-10 h-10 rounded-full bg-active border-2 border-border-main overflow-hidden cursor-pointer hover:border-accent/50 transition-all">
-               <div className="w-full h-full flex items-center justify-center font-black text-xs">
-                 {profile?.displayName?.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase() || 'CA'}
-               </div>
+              <div className="w-full h-full flex items-center justify-center font-black text-xs">
+                {profile?.displayName?.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase() || 'CA'}
+              </div>
             </div>
-            <button 
+            <button
               onClick={() => logout()}
               className="absolute right-0 top-12 bg-card border border-border-main rounded-xl p-2 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap text-xs font-bold flex items-center gap-2 hover:bg-red-500/10 hover:text-red-500"
             >
@@ -119,7 +121,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
 
       {/* Footer Bar - Bento Style */}
       <footer className="mt-4 flex flex-col sm:flex-row justify-between items-center px-6 py-4 bg-card rounded-2xl border border-border-main gap-2 shadow-md">
-        <p className="text-[10px] text-text-muted font-medium uppercase tracking-widest">© 2026 FIFA Corporate World Cup Pool • Tech Support v1.0.4</p>
+        <p className="text-[10px] text-text-muted font-medium uppercase tracking-widest">© 2026 FIFA Corporate World Cup Pool • Yersi logistics v 1.0.1</p>
         <div className="flex gap-4 items-center">
           <div className="flex items-center gap-2">
             <div className="w-2 h-2 rounded-full bg-accent animate-pulse"></div>
@@ -137,15 +139,14 @@ const NavLink = ({ to, label, className = "" }: { to: string, label: string, cla
   return (
     <Link
       to={to}
-      className={`relative py-1 transition-all group ${
-        isActive 
-          ? "text-accent" 
+      className={`relative py-1 transition-all group ${isActive
+          ? "text-accent"
           : "text-text-muted hover:text-text-main"
-      } ${className}`}
+        } ${className}`}
     >
       <span className="relative z-10">{label}</span>
       {isActive && (
-        <motion.div 
+        <motion.div
           layoutId="nav-underline"
           className="absolute -bottom-1 left-0 right-0 h-0.5 bg-accent rounded-full"
         />
@@ -165,15 +166,15 @@ const LoadingScreen = () => (
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const { user, loading } = useAuth();
-  
+
   if (loading) {
     return <LoadingScreen />;
   }
-  
+
   if (!user) {
     return <Navigate to="/login" />;
   }
-  
+
   return <Layout>{children}</Layout>;
 };
 
@@ -189,6 +190,7 @@ export default function App() {
           <Route path="/leaderboard" element={<ProtectedRoute><Leaderboard /></ProtectedRoute>} />
           <Route path="/bonus" element={<ProtectedRoute><BonusQuestions /></ProtectedRoute>} />
           <Route path="/regions" element={<ProtectedRoute><RegionsView /></ProtectedRoute>} />
+          <Route path="/rules" element={<ProtectedRoute><Rules /></ProtectedRoute>} />
           <Route path="/admin" element={<ProtectedRoute><AdminPanel /></ProtectedRoute>} />
         </Routes>
       </BrowserRouter>

@@ -53,13 +53,14 @@ const MatchCard: React.FC<MatchCardProps> = ({
 
   if (isFinished) {
     if (prediction) {
-      if (pts === 10) {
+      const isExactScore = prediction.predictedScoreA === match.scoreA && prediction.predictedScoreB === match.scoreB;
+      if (isExactScore) {
         cardStyle = "border-emerald-500 bg-emerald-500/10 shadow-xl shadow-emerald-500/5";
-        statusText = "✨ +10 Puntos";
+        statusText = `✨ +${pts} Puntos`;
         badgeColor = "bg-emerald-500/10 border-emerald-500/20 text-emerald-400";
-      } else if (pts === 5) {
+      } else if (pts > 0) {
         cardStyle = "border-emerald-500/40 bg-emerald-500/5 shadow-lg shadow-emerald-500/5";
-        statusText = "✓ +5 Puntos";
+        statusText = `✓ +${pts} Puntos`;
         badgeColor = "bg-emerald-500/10 border-emerald-500/10 text-emerald-400";
       } else {
         cardStyle = "border-red-500/30 bg-red-500/5";

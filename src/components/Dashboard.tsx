@@ -1,12 +1,257 @@
 import React, { useEffect, useState } from "react";
 import { useAuth } from "../lib/AuthContext";
 import { userService, matchService, predictionService } from "../lib/services";
-import { Search, Trophy, Star, ChevronRight, Shield, AlertCircle } from "lucide-react";
+import { Search, Trophy, Star, ChevronRight, Shield, AlertCircle, Award } from "lucide-react";
 import { motion } from "motion/react";
 import { useNavigate } from "react-router-dom";
 import { cn } from "../lib/utils";
+import LockModal from "./LockModal";
+
+interface MatchCountdownCardProps {
+  match: any;
+  teams: Record<string, any>;
+}
+
+interface TodayMatchRowProps {
+  match: any;
+  teams: Record<string, any>;
+  prediction?: any;
+  onSave: (matchId: number, scoreA: number, scoreB: number) => Promise<void>;
+  onLockTrigger: () => void;
+}
+
+function TodayMatchRow({ match, teams, prediction, onSave, onLockTrigger }: TodayMatchRowProps) {
+  const [a, setA] = useState(prediction?.predictedScoreA?.toString() || "");
+  const [b, setB] = useState(prediction?.predictedScoreB?.toString() || "");
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    setA(prediction?.predictedScoreA?.toString() || "");
+    setB(prediction?.predictedScoreB?.toString() || "");
+  }, [prediction]);
+
+  const isFinished = match.status === "FINISHED";
+  const isLocked = (() => {
+    if (isFinished) return true;
+    const kickoff = new Date(match.matchDate);
+    return kickoff.getTime() - Date.now() < 15 * 60 * 1000;
+  })();
+
+  const handleBlur = () => {
+    if (isLocked) {
+      onLockTrigger();
+      return;
+    }
+    if (a !== "" && b !== "") {
+      onSave(match.id, parseInt(a, 10), parseInt(b, 10));
+    }
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter") {
+      (e.target as HTMLInputElement).blur();
+    }
+  };
+
+  const tA = teams[match.teamAId];
+  const tB = teams[match.teamBId];
+
+  return (
+    <div 
+      onClick={() => navigate("/tournament")} 
+      className="bg-active/60 border border-border-main/80 p-5 rounded-[2rem] flex items-center justify-between gap-6 cursor-pointer hover:bg-active hover:scale-[1.02] hover:border-accent/30 transition-all duration-300 shadow-lg hover:shadow-xl group"
+    >
+       <div className="flex items-center gap-4 flex-1 overflow-hidden">
+          <div className="w-12 h-12 rounded-full bg-card border border-border-main flex items-center justify-center p-1.5 overflow-hidden shadow-md shrink-0 group-hover:scale-110 transition-transform duration-300">
+             {tA?.logoUrl ? <img src={tA.logoUrl} className="w-full h-full object-contain rounded-full" /> : <Shield size={18} className="text-text-muted" />}
+          </div>
+          <span className="text-sm font-black uppercase italic tracking-tight truncate text-text-main">{tA?.name}</span>
+       </div>
+       
+       <div className="flex flex-col items-center gap-1 shrink-0" onClick={(e) => e.stopPropagation()}>
+          <div className="flex items-center gap-1.5 bg-card px-3 py-2 rounded-xl border border-border-main shadow-inner">
+             <input 
+               type="number" 
+               value={a}
+               disabled={isLocked}
+               onChange={(e) => setA(e.target.value)}
+               onBlur={handleBlur}
+               onKeyDown={handleKeyDown}
+               placeholder="-"
+               className="w-8 h-8 bg-active border border-border-main rounded-lg text-center text-xs font-black text-text-main focus:outline-none focus:border-accent/50 transition-all [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none disabled:opacity-50 disabled:cursor-not-allowed"
+             />
+             <span className="text-xs text-text-muted font-bold">:</span>
+             <input 
+               type="number" 
+               value={b}
+               disabled={isLocked}
+               onChange={(e) => setB(e.target.value)}
+               onBlur={handleBlur}
+               onKeyDown={handleKeyDown}
+               placeholder="-"
+               className="w-8 h-8 bg-active border border-border-main rounded-lg text-center text-xs font-black text-text-main focus:outline-none focus:border-accent/50 transition-all [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none disabled:opacity-50 disabled:cursor-not-allowed"
+             />
+          </div>
+          {isFinished ? (
+            <span className="text-[9px] text-emerald-500 font-bold bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20 whitespace-nowrap">
+              Real: {match.scoreA} - {match.scoreB}
+            </span>
+          ) : (
+            <span className="text-[8px] font-black uppercase text-text-muted tracking-widest">{match.phase}</span>
+          )}
+       </div>
+
+       <div className="flex items-center gap-4 flex-1 justify-end overflow-hidden">
+          <span className="text-sm font-black uppercase italic tracking-tight truncate text-text-main text-right">{tB?.name}</span>
+          <div className="w-12 h-12 rounded-full bg-card border border-border-main flex items-center justify-center p-1.5 overflow-hidden shadow-md shrink-0 group-hover:scale-110 transition-transform duration-300">
+             {tB?.logoUrl ? <img src={tB.logoUrl} className="w-full h-full object-contain rounded-full" /> : <Shield size={18} className="text-text-muted" />}
+          </div>
+       </div>
+    </div>
+  );
+}
+
+function BonusTimerBanner() {
+  const navigate = useNavigate();
+  const [timeLeft, setTimeLeft] = useState<string>("CALCULANDO...");
+  const [isExpired, setIsExpired] = useState<boolean>(false);
+
+  useEffect(() => {
+    const deadline = new Date('2026-06-15T23:59:59-05:00').getTime();
+
+    const updateTimer = () => {
+      const now = new Date().getTime();
+      const diff = deadline - now;
+
+      if (diff <= 0) {
+        setIsExpired(true);
+        setTimeLeft("CERRADO");
+        return;
+      }
+
+      const secs = Math.floor((diff / 1000) % 60);
+      const mins = Math.floor((diff / (1000 * 60)) % 60);
+      const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+
+      let str = "";
+      if (days > 0) {
+        str += `${days}d `;
+      }
+      str += `${hours.toString().padStart(2, '0')}h ${mins.toString().padStart(2, '0')}m ${secs.toString().padStart(2, '0')}s`;
+      setTimeLeft(str);
+    };
+
+    updateTimer();
+    const interval = setInterval(updateTimer, 1000);
+    return () => clearInterval(interval);
+  }, []);
+
+  return (
+    <div className={cn(
+      "w-full mt-6 p-4 rounded-2xl border transition-all duration-300 flex flex-col sm:flex-row items-center justify-between gap-4 shrink-0",
+      isExpired 
+        ? "bg-red-500/5 border-red-500/10 text-red-500/80" 
+        : "bg-yellow-500/5 border-yellow-500/10 shadow-lg shadow-yellow-500/5 text-yellow-500/80"
+    )}>
+      <div className="flex items-center gap-3">
+        <div className={cn(
+          "w-8 h-8 rounded-xl flex items-center justify-center shrink-0 border",
+          isExpired ? "bg-red-500/10 border-red-500/20 text-red-400" : "bg-yellow-500/10 border-yellow-500/20 text-yellow-400"
+        )}>
+          <Award size={16} />
+        </div>
+        <div className="text-left">
+          <p className="text-[10px] font-black uppercase tracking-widest text-text-main leading-tight">
+            {isExpired ? "Respuestas de preguntas bloqueadas." : "Recuerda responder tus preguntas bonus antes de:"}
+          </p>
+          {!isExpired && (
+            <p className="font-mono text-[10px] font-black text-yellow-400 mt-1 uppercase tracking-wider animate-pulse">
+              Tiempo restante: {timeLeft}
+            </p>
+          )}
+        </div>
+      </div>
+
+      {!isExpired && (
+        <button
+          onClick={() => navigate("/bonus")}
+          className="bg-yellow-500 text-black font-black text-[9px] uppercase tracking-widest py-2.5 px-4 rounded-xl hover:scale-105 active:scale-95 transition-all cursor-pointer shadow-md shadow-yellow-500/10 whitespace-nowrap"
+        >
+          Responder Bonus
+        </button>
+      )}
+    </div>
+  );
+}
+
+function MatchCountdownCard({ match, teams }: MatchCountdownCardProps) {
+  const [timeLeft, setTimeLeft] = useState<string>("CALCULANDO...");
+
+  useEffect(() => {
+    const updateTimer = () => {
+      const now = new Date().getTime();
+      const limitTime = new Date(match.matchDate).getTime() - 15 * 60 * 1000;
+      const diff = limitTime - now;
+
+      if (diff <= 0) {
+        setTimeLeft("CERRADO");
+        return;
+      }
+
+      const secs = Math.floor((diff / 1000) % 60);
+      const mins = Math.floor((diff / (1000 * 60)) % 60);
+      const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+
+      let str = "";
+      if (days > 0) {
+        str += `${days}d `;
+      }
+      str += `${hours.toString().padStart(2, '0')}h ${mins.toString().padStart(2, '0')}m ${secs.toString().padStart(2, '0')}s`;
+      setTimeLeft(str);
+    };
+
+    updateTimer();
+    const interval = setInterval(updateTimer, 1000);
+    return () => clearInterval(interval);
+  }, [match]);
+
+  const teamA = teams[match.teamAId];
+  const teamB = teams[match.teamBId];
+
+  return (
+    <div className="bg-active border border-border-main p-4 rounded-2xl text-center py-4 space-y-3">
+      <p className="text-[8px] text-text-muted font-bold uppercase tracking-widest leading-none">
+        Próximo Partido a Bloquear
+      </p>
+      <div className="flex items-center justify-center gap-2">
+        <span className="text-[10px] font-black uppercase text-accent truncate max-w-[80px]">
+          {teamA?.name || "TBD"}
+        </span>
+        <span className="text-[8px] text-text-muted font-black">VS</span>
+        <span className="text-[10px] font-black uppercase text-accent truncate max-w-[80px]">
+          {teamB?.name || "TBD"}
+        </span>
+      </div>
+      
+      <div className="h-px bg-border-main w-full" />
+      
+      <div className={cn(
+        "font-mono text-base font-black tracking-wider py-1 px-3 rounded-xl inline-block",
+        timeLeft === "CERRADO" ? "text-red-500 bg-red-500/10" : "text-yellow-500 bg-yellow-500/10 animate-pulse"
+      )}>
+        {timeLeft}
+      </div>
+      <p className="text-[7px] text-text-muted font-black uppercase tracking-wider">
+        Elecciones se cierran 15m antes
+      </p>
+    </div>
+  );
+}
 
 export default function Dashboard() {
+
   const { profile } = useAuth();
   const navigate = useNavigate();
   const [players, setPlayers] = useState<any[]>([]);
@@ -15,8 +260,46 @@ export default function Dashboard() {
   const [predictions, setPredictions] = useState<Record<string, any>>({});
   const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(true);
-  const [timeLeft, setTimeLeft] = useState<string>("CALCULANDO...");
-  const [nextMatchToPredict, setNextMatchToPredict] = useState<any>(null);
+  const [nextMatchesToPredict, setNextMatchesToPredict] = useState<any[]>([]);
+  const [lockModalOpen, setLockModalOpen] = useState(false);
+
+  const savePrediction = async (matchId: number, scoreA: number, scoreB: number) => {
+    if (!profile) return;
+    try {
+      const existingPred = predictions[matchId];
+      if (existingPred) {
+        await predictionService.update(existingPred.id, {
+          predictedScoreA: scoreA,
+          predictedScoreB: scoreB,
+        });
+      } else {
+        await predictionService.create({
+          matchId,
+          predictedScoreA: scoreA,
+          predictedScoreB: scoreB,
+        });
+      }
+      
+      // Reload predictions from API to sync state
+      const predsRes = await predictionService.getUserPredictions(parseInt(profile.uid));
+      const predsMap: Record<string, any> = {};
+      (predsRes.data.data || []).forEach((p: any) => {
+        predsMap[p.matchId] = p;
+      });
+      setPredictions(predsMap);
+    } catch (err: any) {
+      console.error('[DASHBOARD] Error saving prediction:', err);
+      if (
+        err.response?.status === 400 || 
+        err.response?.data?.error?.includes("bloqueada") || 
+        err.response?.data?.message?.includes("bloqueada") || 
+        err.message?.includes("bloqueada")
+      ) {
+        setLockModalOpen(true);
+      }
+    }
+  };
+
 
   useEffect(() => {
     const loadData = async () => {
@@ -60,48 +343,19 @@ export default function Dashboard() {
     }
   }, [profile]);
 
-  // Temporizador para el cierre de elecciones del próximo partido (15 minutos antes)
+  // Obtener los próximos 2 partidos pendientes a bloquear (con elecciones abiertas)
   useEffect(() => {
     if (allMatches.length === 0) return;
 
     const pending = allMatches
-      .filter((m) => m.status === "PENDING")
+      .filter((m) => {
+        if (m.status !== "PENDING") return false;
+        const limitTime = new Date(m.matchDate).getTime() - 15 * 60 * 1000;
+        return limitTime > Date.now();
+      })
       .sort((a, b) => new Date(a.matchDate).getTime() - new Date(b.matchDate).getTime());
 
-    if (pending.length > 0) {
-      const targetMatch = pending[0];
-      setNextMatchToPredict(targetMatch);
-
-      const updateTimer = () => {
-        const now = new Date().getTime();
-        const limitTime = new Date(targetMatch.matchDate).getTime() - 15 * 60 * 1000;
-        const diff = limitTime - now;
-
-        if (diff <= 0) {
-          setTimeLeft("CERRADO");
-          return;
-        }
-
-        const secs = Math.floor((diff / 1000) % 60);
-        const mins = Math.floor((diff / (1000 * 60)) % 60);
-        const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
-        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-
-        let str = "";
-        if (days > 0) {
-          str += `${days}d `;
-        }
-        str += `${hours.toString().padStart(2, '0')}h ${mins.toString().padStart(2, '0')}m ${secs.toString().padStart(2, '0')}s`;
-        setTimeLeft(str);
-      };
-
-      updateTimer();
-      const interval = setInterval(updateTimer, 1000);
-      return () => clearInterval(interval);
-    } else {
-      setTimeLeft("CERRADO");
-      setNextMatchToPredict(null);
-    }
+    setNextMatchesToPredict(pending.slice(0, 2));
   }, [allMatches]);
 
   // Obtener los 5 equipos más victoriosos
@@ -146,15 +400,29 @@ export default function Dashboard() {
     player.username.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const today = new Date().toISOString().split('T')[0];
-  const matchesOfToday = allMatches.filter(m => m.matchDate.startsWith(today) && m.status === "PENDING");
+  const todayLocal = new Date();
+  const matchesOfToday = allMatches.filter(m => {
+    const mDate = new Date(m.matchDate);
+    return mDate.getDate() === todayLocal.getDate() &&
+           mDate.getMonth() === todayLocal.getMonth() &&
+           mDate.getFullYear() === todayLocal.getFullYear();
+  });
+
   const upcomingMatches = allMatches
-    .filter(m => m.status === "PENDING" && !m.matchDate.startsWith(today))
+    .filter(m => {
+      if (m.status !== "PENDING") return false;
+      const mDate = new Date(m.matchDate);
+      const isToday = mDate.getDate() === todayLocal.getDate() &&
+                      mDate.getMonth() === todayLocal.getMonth() &&
+                      mDate.getFullYear() === todayLocal.getFullYear();
+      return !isToday && mDate.getTime() > Date.now();
+    })
     .sort((a, b) => new Date(a.matchDate).getTime() - new Date(b.matchDate).getTime())
     .slice(0, 3);
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-12 gap-4 lg:h-[calc(100vh-140px)] overflow-hidden">
+      <LockModal isOpen={lockModalOpen} onClose={() => setLockModalOpen(false)} />
       {/* Search & Leaderboard (Bento Card - Left Column) */}
       <div className="md:col-span-4 lg:col-span-3 bg-card rounded-3xl border border-border-main p-6 flex flex-col overflow-hidden shadow-2xl">
         <div className="mb-6">
@@ -248,41 +516,16 @@ export default function Dashboard() {
                  </div>
                  
                  <div className="grid grid-cols-1 gap-4 w-full">
-                    {matchesOfToday.map(m => {
-                      const tA = teams[m.teamAId];
-                      const tB = teams[m.teamBId];
-                      const p = predictions[m.id];
-                      return (
-                        <div 
-                          key={m.id} 
-                          onClick={() => navigate("/tournament")} 
-                          className="bg-active/60 border border-border-main/80 p-5 rounded-[2rem] flex items-center justify-between gap-6 cursor-pointer hover:bg-active hover:scale-[1.02] hover:border-accent/30 transition-all duration-300 shadow-lg hover:shadow-xl group"
-                        >
-                           <div className="flex items-center gap-4 flex-1 overflow-hidden">
-                              <div className="w-12 h-12 rounded-full bg-card border border-border-main flex items-center justify-center p-1.5 overflow-hidden shadow-md shrink-0 group-hover:scale-110 transition-transform duration-300">
-                                 {tA?.logoUrl ? <img src={tA.logoUrl} className="w-full h-full object-contain rounded-full" /> : <Shield size={18} className="text-text-muted" />}
-                              </div>
-                              <span className="text-sm font-black uppercase italic tracking-tight truncate text-text-main">{tA?.name}</span>
-                           </div>
-                           
-                           <div className="flex flex-col items-center gap-1 shrink-0">
-                             <div className="flex items-center gap-2.5 bg-card px-4 py-2.5 rounded-xl border border-border-main shadow-inner">
-                                <span className="text-sm font-black text-accent">{p?.predictedScoreA ?? '-'}</span>
-                                <span className="text-xs text-text-muted font-bold">:</span>
-                                <span className="text-sm font-black text-accent">{p?.predictedScoreB ?? '-'}</span>
-                             </div>
-                             <span className="text-[8px] font-black uppercase text-text-muted tracking-widest">{m.phase}</span>
-                           </div>
-
-                           <div className="flex items-center gap-4 flex-1 justify-end overflow-hidden">
-                              <span className="text-sm font-black uppercase italic tracking-tight truncate text-text-main text-right">{tB?.name}</span>
-                              <div className="w-12 h-12 rounded-full bg-card border border-border-main flex items-center justify-center p-1.5 overflow-hidden shadow-md shrink-0 group-hover:scale-110 transition-transform duration-300">
-                                 {tB?.logoUrl ? <img src={tB.logoUrl} className="w-full h-full object-contain rounded-full" /> : <Shield size={18} className="text-text-muted" />}
-                              </div>
-                           </div>
-                        </div>
-                      );
-                    })}
+                    {matchesOfToday.map(m => (
+                      <TodayMatchRow 
+                        key={m.id} 
+                        match={m} 
+                        teams={teams} 
+                        prediction={predictions[m.id]} 
+                        onSave={savePrediction} 
+                        onLockTrigger={() => setLockModalOpen(true)} 
+                      />
+                    ))}
                  </div>
                  <button 
                    onClick={() => navigate("/tournament")}
@@ -346,6 +589,7 @@ export default function Dashboard() {
                  <p className="text-[10px] font-black uppercase tracking-widest text-text-muted">Soporte habilitará los partidos pronto</p>
               </div>
            )}
+           <BonusTimerBanner />
         </div>
       </div>
 
@@ -355,40 +599,19 @@ export default function Dashboard() {
         <div className="bg-card rounded-3xl border border-border-main p-6 shadow-xl flex flex-col justify-between">
           <h2 className="text-[10px] font-black uppercase tracking-[0.2em] text-blue-500 mb-4">Cierre de Elecciones</h2>
           <div className="space-y-4 flex-1 flex flex-col justify-center">
-             {nextMatchToPredict ? (
-               <div className="bg-active border border-border-main p-4 rounded-2xl text-center py-5 space-y-3">
-                 <p className="text-[8px] text-text-muted font-bold uppercase tracking-widest leading-none">
-                   Próximo Partido a Bloquear
-                 </p>
-                 <div className="flex items-center justify-center gap-2">
-                   <span className="text-[10px] font-black uppercase text-accent truncate max-w-[80px]">
-                     {teams[nextMatchToPredict.teamAId]?.name || "TBD"}
-                   </span>
-                   <span className="text-[8px] text-text-muted font-black">VS</span>
-                   <span className="text-[10px] font-black uppercase text-accent truncate max-w-[80px]">
-                     {teams[nextMatchToPredict.teamBId]?.name || "TBD"}
-                   </span>
-                 </div>
-                 
-                 <div className="h-px bg-border-main w-full" />
-                 
-                 <div className={cn(
-                   "font-mono text-lg font-black tracking-wider py-1 px-3 rounded-xl inline-block",
-                   timeLeft === "CERRADO" ? "text-red-500 bg-red-500/10" : "text-yellow-500 bg-yellow-500/10 animate-pulse"
-                 )}>
-                   {timeLeft}
-                 </div>
-                 <p className="text-[7px] text-text-muted font-black uppercase tracking-wider">
-                   Elecciones se cierran 15m antes
-                 </p>
-               </div>
-             ) : (
-               <div className="bg-active border border-border-main p-4 rounded-2xl text-center py-8">
-                 <AlertCircle size={20} className="mx-auto text-red-500 mb-2 opacity-50" />
-                 <p className="text-[10px] font-black uppercase tracking-widest text-text-muted">Elecciones Cerradas</p>
-                 <p className="text-[8px] text-text-muted font-bold uppercase tracking-widest mt-1">No hay partidos pendientes</p>
-               </div>
-             )}
+              {nextMatchesToPredict.length > 0 ? (
+                <div className="space-y-3 w-full">
+                  {nextMatchesToPredict.map((match) => (
+                    <MatchCountdownCard key={match.id} match={match} teams={teams} />
+                  ))}
+                </div>
+              ) : (
+                <div className="bg-active border border-border-main p-4 rounded-2xl text-center py-8">
+                  <AlertCircle size={20} className="mx-auto text-red-500 mb-2 opacity-50" />
+                  <p className="text-[10px] font-black uppercase tracking-widest text-text-muted">Elecciones Cerradas</p>
+                  <p className="text-[8px] text-text-muted font-bold uppercase tracking-widest mt-1">No hay partidos pendientes</p>
+                </div>
+              )}
           </div>
           <button 
             onClick={() => navigate("/tournament")}

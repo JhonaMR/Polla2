@@ -164,27 +164,15 @@ export class PredictionService {
       where: { matchId },
     });
 
-    const pointsConfig = await pointsService.getConfig();
-
     // Calculate scores
     for (const prediction of predictions) {
-      let pointsEarned = 0;
-      let isCorrect = false;
-
-      // Exact score match
-      if (prediction.predictedScoreA === match.scoreA && prediction.predictedScoreB === match.scoreB) {
-        pointsEarned = pointsConfig.aciertoCompleto;
-        isCorrect = true;
-      }
-      // Correct winner
-      else if (
-        (prediction.predictedScoreA > prediction.predictedScoreB && match.scoreA > match.scoreB) ||
-        (prediction.predictedScoreA < prediction.predictedScoreB && match.scoreA < match.scoreB) ||
-        (prediction.predictedScoreA === prediction.predictedScoreB && match.scoreA === match.scoreB)
-      ) {
-        pointsEarned = pointsConfig.acierto;
-        isCorrect = true;
-      }
+      const { pointsEarned, isCorrect } = pointsService.getPointsForMatch(
+        match.phase,
+        prediction.predictedScoreA,
+        prediction.predictedScoreB,
+        match.scoreA,
+        match.scoreB
+      );
 
       // Update prediction
       await prisma.prediction.update({

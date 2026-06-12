@@ -25,7 +25,7 @@ export default function Login() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
-    
+
     if (!isLogin && name.trim().length === 0) {
       setError("INGRESE SU NOMBRE.");
       return;
@@ -80,13 +80,13 @@ export default function Login() {
         </div>
 
         <div className="flex bg-active p-1.5 rounded-2xl border border-white/5 mb-8 shadow-inner">
-          <button 
+          <button
             onClick={() => setIsLogin(true)}
             className={`flex-1 py-3 text-[10px] font-black uppercase tracking-widest rounded-xl transition-all duration-300 ${isLogin ? "bg-accent text-black shadow-lg shadow-accent/20" : "text-gray-500 hover:text-white"}`}
           >
             Ingresar
           </button>
-          <button 
+          <button
             onClick={() => setIsLogin(false)}
             className={`flex-1 py-3 text-[10px] font-black uppercase tracking-widest rounded-xl transition-all duration-300 ${!isLogin ? "bg-accent text-black shadow-lg shadow-accent/20" : "text-gray-500 hover:text-white"}`}
           >
@@ -98,8 +98,8 @@ export default function Login() {
           {!isLogin && (
             <div className="relative group">
               <User className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-600 group-focus-within:text-accent transition-colors" size={18} />
-              <input 
-                type="text" 
+              <input
+                type="text"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 className="w-full bg-active border border-white/5 rounded-2xl py-5 pl-12 pr-4 text-xs font-bold focus:outline-none focus:border-accent/40 transition-all placeholder:text-gray-700"
@@ -111,8 +111,8 @@ export default function Login() {
 
           <div className="relative group">
             <User className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-600 group-focus-within:text-accent transition-colors" size={18} />
-            <input 
-              type="text" 
+            <input
+              type="text"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               className="w-full bg-active border border-white/5 rounded-2xl py-5 pl-12 pr-4 text-sm font-bold focus:outline-none focus:border-accent/40 transition-all placeholder:text-gray-700"
@@ -123,8 +123,8 @@ export default function Login() {
 
           <div className="relative group">
             <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-600 group-focus-within:text-accent transition-colors" size={18} />
-            <input 
-              type="password" 
+            <input
+              type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               className="w-full bg-active border border-white/5 rounded-2xl py-5 pl-12 pr-4 text-sm font-bold focus:outline-none focus:border-accent/40 transition-all placeholder:text-gray-700"
@@ -139,8 +139,8 @@ export default function Login() {
             </p>
           )}
 
-          <button 
-            type="submit" 
+          <button
+            type="submit"
             disabled={loading || authLoading}
             className="w-full bg-accent text-black font-black uppercase italic tracking-widest py-5 rounded-2xl shadow-xl shadow-accent/20 hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-50 mt-4 flex items-center justify-center gap-2"
           >
@@ -149,14 +149,8 @@ export default function Login() {
           </button>
         </form>
 
-        <div className="mt-8 p-4 bg-white/5 rounded-2xl border border-white/5 text-center">
-            <p className="text-[9px] text-gray-500 font-bold uppercase tracking-widest leading-relaxed">
-              Usuario de prueba: <span className="text-accent">SOP</span> / Contraseña: <span className="text-accent">2114</span>
-            </p>
-        </div>
-
         <p className="mt-8 text-center text-[9px] text-gray-700 font-bold uppercase tracking-[0.3em]">
-           SECURE GATEWAY • © 2026
+          Yersi logistics • © 2026
         </p>
       </motion.div>
     </div>

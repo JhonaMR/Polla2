@@ -374,12 +374,13 @@ const MatchRow: React.FC<MatchRowProps> = ({
 
   if (isFinished) {
     if (prediction) {
-      if (pts === 10) {
+      const isExactScore = prediction.predictedScoreA === match.scoreA && prediction.predictedScoreB === match.scoreB;
+      if (isExactScore) {
         cardStyle = "border-emerald-500/40 bg-emerald-500/10 shadow-lg shadow-emerald-500/5";
-        badge = <span className="text-[8px] font-black text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded-full whitespace-nowrap">✨ +10 PTS</span>;
-      } else if (pts === 5) {
+        badge = <span className="text-[8px] font-black text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded-full whitespace-nowrap">✨ +{pts} PTS</span>;
+      } else if (pts > 0) {
         cardStyle = "border-emerald-500/20 bg-emerald-500/5 shadow-md shadow-emerald-500/5";
-        badge = <span className="text-[8px] font-black text-emerald-400 bg-emerald-500/10 border border-emerald-500/10 px-2 py-0.5 rounded-full whitespace-nowrap">✓ +5 PTS</span>;
+        badge = <span className="text-[8px] font-black text-emerald-400 bg-emerald-500/10 border border-emerald-500/10 px-2 py-0.5 rounded-full whitespace-nowrap">✓ +{pts} PTS</span>;
       } else {
         cardStyle = "border-red-500/20 bg-red-500/5";
         badge = <span className="text-[8px] font-black text-red-400 bg-red-500/10 border border-red-500/10 px-2 py-0.5 rounded-full whitespace-nowrap">✕ 0 PTS</span>;
