@@ -248,7 +248,7 @@ export default function BracketView() {
   const bronzeWinnerTeam = getBronzeWinner();
 
   // Mathematical height definitions for perfect alignments
-  const r32CellHeight = 115; // Slightly increased spacing to have a light gap between cards
+  const r32CellHeight = 110; // Slightly increased spacing to have a light gap between cards
   const r16CellHeight = r32CellHeight * 2;
   const qfCellHeight = r16CellHeight * 2;
   const sfCellHeight = qfCellHeight * 2;
@@ -828,31 +828,31 @@ function BracketMatchCard({ match, prediction, mode, isLocked, onSave, onCardCli
     <div
       onClick={handleCardClick}
       className={cn(
-        "relative border rounded-2xl p-2.5 flex flex-col gap-1.5 w-60 shadow-xl transition-all duration-300 hover:scale-[1.015] cursor-pointer",
+        "relative border rounded-2xl px-3 py-1.5 flex flex-col gap-0.5 w-60 shadow-xl transition-all duration-300 hover:scale-[1.015] cursor-pointer",
         cardStyle
       )}
     >
       {/* Match number */}
-      <div className="flex items-center justify-between text-[7px] font-black text-gray-500 tracking-wider uppercase leading-none">
+      <div className="flex items-center justify-between text-[7px] font-black text-gray-500 tracking-wider uppercase leading-none mb-0.5">
         <span>Partido M#{match.matchNumber}</span>
         {isLocked && mode === "user" && <Lock size={7} className="text-yellow-500" />}
       </div>
 
       {/* Team A row */}
       <div className={cn(
-        "flex items-center justify-between py-0.5",
+        "flex items-center justify-between py-0",
         winnerId && winnerId === match.teamAId ? "text-accent font-black" : "text-text-muted",
         winnerId && winnerId !== match.teamAId && "opacity-45"
       )}>
         <div className="flex items-center gap-1.5 overflow-hidden">
-          <div className="w-5 h-5 rounded-full bg-active flex items-center justify-center p-0.5 border border-border-main shrink-0 overflow-hidden">
+          <div className="w-7 h-7 rounded-full bg-active flex items-center justify-center p-0.5 border border-border-main shrink-0 overflow-hidden">
             {teamA?.logoUrl ? (
               <img src={teamA.logoUrl} className="w-full h-full object-contain rounded-full" />
             ) : (
-              <Shield size={9} />
+              <Shield size={13} />
             )}
           </div>
-          <span className="text-[9px] uppercase truncate font-black tracking-tight">
+          <span className="text-xs uppercase truncate font-black tracking-tight">
             {teamA?.name || getPlaceholderName(match.matchNumber, 'A')}
           </span>
         </div>
@@ -864,28 +864,28 @@ function BracketMatchCard({ match, prediction, mode, isLocked, onSave, onCardCli
           onBlur={handleBlur}
           onKeyDown={handleKeyDown}
           placeholder="-"
-          className="w-7 h-7 bg-active border border-border-main/50 rounded-lg text-center text-[10px] font-black text-text-main focus:outline-none focus:border-accent/40 transition-all [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none disabled:opacity-50 disabled:cursor-not-allowed shrink-0"
+          className="w-8 h-8 bg-active border border-border-main/50 rounded-lg text-center text-xs font-black text-text-main focus:outline-none focus:border-accent/40 transition-all [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none disabled:opacity-50 disabled:cursor-not-allowed shrink-0"
         />
       </div>
 
       {/* Divider */}
-      <div className="h-px bg-white/5 w-full" />
+      <div className="h-px bg-white/5 w-full my-0.5" />
 
       {/* Team B row */}
       <div className={cn(
-        "flex items-center justify-between py-0.5",
+        "flex items-center justify-between py-0",
         winnerId && winnerId === match.teamBId ? "text-accent font-black" : "text-text-muted",
         winnerId && winnerId !== match.teamBId && "opacity-45"
       )}>
         <div className="flex items-center gap-1.5 overflow-hidden">
-          <div className="w-5 h-5 rounded-full bg-active flex items-center justify-center p-0.5 border border-border-main shrink-0 overflow-hidden">
+          <div className="w-7 h-7 rounded-full bg-active flex items-center justify-center p-0.5 border border-border-main shrink-0 overflow-hidden">
             {teamB?.logoUrl ? (
               <img src={teamB.logoUrl} className="w-full h-full object-contain rounded-full" />
             ) : (
-              <Shield size={9} />
+              <Shield size={13} />
             )}
           </div>
-          <span className="text-[9px] uppercase truncate font-black tracking-tight">
+          <span className="text-xs uppercase truncate font-black tracking-tight">
             {teamB?.name || getPlaceholderName(match.matchNumber, 'B')}
           </span>
         </div>
@@ -897,7 +897,7 @@ function BracketMatchCard({ match, prediction, mode, isLocked, onSave, onCardCli
           onBlur={handleBlur}
           onKeyDown={handleKeyDown}
           placeholder="-"
-          className="w-7 h-7 bg-active border border-border-main/50 rounded-lg text-center text-[10px] font-black text-text-main focus:outline-none focus:border-accent/40 transition-all [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none disabled:opacity-50 disabled:cursor-not-allowed shrink-0"
+          className="w-8 h-8 bg-active border border-border-main/50 rounded-lg text-center text-xs font-black text-text-main focus:outline-none focus:border-accent/40 transition-all [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none disabled:opacity-50 disabled:cursor-not-allowed shrink-0"
         />
       </div>
     </div>
