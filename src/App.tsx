@@ -64,7 +64,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
           <NavLink to="/bracket" label="Árbol" />
           <NavLink to="/leaderboard" label="Clasificación" />
           <NavLink to="/bonus" label="Bonus" />
-          <NavLink to="/regions" label="Regiones" />
+          <NavLink to="/regions" label="Grupos" />
           <NavLink to="/rules" label="Cómo Jugar" />
           {isAdmin && <NavLink to="/admin" label="Soporte" className="text-yellow-500" />}
         </nav>
