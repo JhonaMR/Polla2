@@ -61,7 +61,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
         <nav className="hidden md:flex gap-6 text-xs font-bold tracking-widest uppercase items-center">
           <NavLink to="/" label="Dashboard" />
           <NavLink to="/tournament" label="Eliminatorias" />
-          <NavLink to="/bracket" label="Árbol" />
+          <NavLink to="/bracket" label="Llaves" />
           <NavLink to="/leaderboard" label="Clasificación" />
           <NavLink to="/bonus" label="Bonus" />
           <NavLink to="/regions" label="Grupos" />
@@ -140,8 +140,8 @@ const NavLink = ({ to, label, className = "" }: { to: string, label: string, cla
     <Link
       to={to}
       className={`relative py-1 transition-all group ${isActive
-          ? "text-accent"
-          : "text-text-muted hover:text-text-main"
+        ? "text-accent"
+        : "text-text-muted hover:text-text-main"
         } ${className}`}
     >
       <span className="relative z-10">{label}</span>

@@ -73,14 +73,14 @@ export class MatchProgressionService {
       }
     }
 
-    // 3. For Semifinals (Match 77 & 78), also send the loser to Third Place Play-off (Match 80)
-    if (match.matchNumber === 77 || match.matchNumber === 78) {
+    // 3. For Semifinals (Match 101 & 102), also send the loser to Third Place Play-off (Match 103)
+    if (match.matchNumber === 101 || match.matchNumber === 102) {
       const thirdPlaceMatch = await prisma.match.findFirst({
-        where: { matchNumber: 80 }
+        where: { matchNumber: 103 }
       });
 
       if (thirdPlaceMatch && !thirdPlaceMatch.isManualOverride) {
-        const slotField = match.matchNumber === 77 ? 'teamAId' : 'teamBId';
+        const slotField = match.matchNumber === 101 ? 'teamAId' : 'teamBId';
         if (finalLoserId) {
           await prisma.match.update({
             where: { id: thirdPlaceMatch.id },
@@ -138,13 +138,13 @@ export class MatchProgressionService {
     }
 
     // Reset loser in Third Place match if Semifinal
-    if ((match.matchNumber === 77 || match.matchNumber === 78) && prevLoserId) {
+    if ((match.matchNumber === 101 || match.matchNumber === 102) && prevLoserId) {
       const thirdPlaceMatch = await prisma.match.findFirst({
-        where: { matchNumber: 80 }
+        where: { matchNumber: 103 }
       });
 
       if (thirdPlaceMatch && !thirdPlaceMatch.isManualOverride && thirdPlaceMatch.status === 'PENDING') {
-        const slotField = match.matchNumber === 77 ? 'teamAId' : 'teamBId';
+        const slotField = match.matchNumber === 101 ? 'teamAId' : 'teamBId';
         const currentTeamInSlot = slotField === 'teamAId' ? thirdPlaceMatch.teamAId : thirdPlaceMatch.teamBId;
         if (currentTeamInSlot === prevLoserId) {
           await prisma.match.update({
@@ -153,7 +153,7 @@ export class MatchProgressionService {
               [slotField]: null
             }
           });
-          console.log(`[PROGRESSION] Cleared slot ${slotField === 'teamAId' ? 'A' : 'B'} from Third Place Match 80 due to Semifinal revert`);
+          console.log(`[PROGRESSION] Cleared slot ${slotField === 'teamAId' ? 'A' : 'B'} from Third Place Match 103 due to Semifinal revert`);
         }
       }
     }
