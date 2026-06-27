@@ -64,13 +64,13 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
             <Menu className="w-6 h-6" />
           </button>
           <h1 className="text-xl font-black tracking-tighter italic uppercase">
-            Corporate Champions <span className="text-accent">Pool</span>
+            Polla mundialista <span className="text-accent">Plow</span>
           </h1>
         </div>
 
         <nav className="hidden md:flex gap-6 text-xs font-bold tracking-widest uppercase items-center">
-          <NavLink to="/" label="Dashboard" />
-          <NavLink to="/tournament" label="Eliminatorias" />
+          <NavLink to="/" label="Inicio" />
+          <NavLink to="/tournament" label="Pronósticos" />
           <NavLink to="/bracket" label="Llaves" />
           <NavLink to="/leaderboard" label="Clasificación" />
           <NavLink to="/results" label="Resultados" />
@@ -141,7 +141,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
                     <Trophy className="w-5 h-5 text-white" />
                   </div>
                   <span className="font-black text-sm italic uppercase tracking-tighter">
-                    Champions <span className="text-accent">Pool</span>
+                    Menú <span className="text-accent"></span>
                   </span>
                 </div>
                 <button
@@ -154,8 +154,8 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
 
               {/* Navigation Links inside Sidebar */}
               <nav className="flex flex-col gap-2 text-sm font-bold tracking-widest uppercase flex-1">
-                <SidebarNavLink to="/" label="Dashboard" onClick={() => setIsSidebarOpen(false)} />
-                <SidebarNavLink to="/tournament" label="Eliminatorias" onClick={() => setIsSidebarOpen(false)} />
+                <SidebarNavLink to="/" label="Inicio" onClick={() => setIsSidebarOpen(false)} />
+                <SidebarNavLink to="/tournament" label="Pronósticos" onClick={() => setIsSidebarOpen(false)} />
                 <SidebarNavLink to="/bracket" label="Llaves" onClick={() => setIsSidebarOpen(false)} />
                 <SidebarNavLink to="/leaderboard" label="Clasificación" onClick={() => setIsSidebarOpen(false)} />
                 <SidebarNavLink to="/results" label="Resultados" onClick={() => setIsSidebarOpen(false)} />
