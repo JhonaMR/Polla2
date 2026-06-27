@@ -12,7 +12,9 @@ import {
   ChevronRight,
   ClipboardList,
   Sun,
-  Moon
+  Moon,
+  Menu,
+  X
 } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 
@@ -29,6 +31,9 @@ import ResultsView from "./components/ResultsView";
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
   const { profile, isAdmin, logout } = useAuth();
+
+  // Estado para controlar el menú lateral
+  const [isSidebarOpen, setIsSidebarOpen] = React.useState(false);
 
   // Estado para controlar el tema (light o dark) con persistencia
   const [theme, setTheme] = React.useState<"light" | "dark">(() => {
@@ -51,9 +56,13 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
       {/* Header Navigation - Bento Style */}
       <header className="flex items-center justify-between mb-3 bg-card py-2.5 px-4 rounded-2xl border border-border-main shadow-xl backdrop-blur-md sticky top-1.5 z-50">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-gradient-to-br from-accent to-blue-600 rounded-lg flex items-center justify-center shadow-lg shadow-accent/20">
-            <Trophy className="w-6 h-6 text-white" />
-          </div>
+          <button
+            onClick={() => setIsSidebarOpen(true)}
+            className="w-10 h-10 bg-gradient-to-br from-accent to-blue-600 rounded-lg flex items-center justify-center shadow-lg shadow-accent/20 text-white hover:opacity-90 transition-opacity cursor-pointer focus:outline-none"
+            title="Abrir menú"
+          >
+            <Menu className="w-6 h-6" />
+          </button>
           <h1 className="text-xl font-black tracking-tighter italic uppercase">
             Corporate Champions <span className="text-accent">Pool</span>
           </h1>
@@ -105,6 +114,90 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
         </div>
       </header>
 
+      {/* Sidebar Navigation Drawer */}
+      <AnimatePresence>
+        {isSidebarOpen && (
+          <>
+            {/* Backdrop Overlay */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 0.5 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setIsSidebarOpen(false)}
+              className="fixed inset-0 bg-black/60 z-50 backdrop-blur-sm"
+            />
+            {/* Drawer Panel */}
+            <motion.div
+              initial={{ x: "-100%" }}
+              animate={{ x: 0 }}
+              exit={{ x: "-100%" }}
+              transition={{ type: "spring", damping: 25, stiffness: 200 }}
+              className="fixed top-0 left-0 bottom-0 w-80 bg-card border-r border-border-main z-50 p-6 flex flex-col shadow-2xl overflow-y-auto"
+            >
+              {/* Header inside Sidebar */}
+              <div className="flex items-center justify-between mb-8 pb-4 border-b border-border-main">
+                <div className="flex items-center gap-2">
+                  <div className="w-8 h-8 bg-gradient-to-br from-accent to-blue-600 rounded-lg flex items-center justify-center shadow-md">
+                    <Trophy className="w-5 h-5 text-white" />
+                  </div>
+                  <span className="font-black text-sm italic uppercase tracking-tighter">
+                    Champions <span className="text-accent">Pool</span>
+                  </span>
+                </div>
+                <button
+                  onClick={() => setIsSidebarOpen(false)}
+                  className="w-8 h-8 rounded-lg bg-active border border-border-main flex items-center justify-center text-text-main hover:bg-white/10 transition-colors cursor-pointer"
+                >
+                  <X size={16} />
+                </button>
+              </div>
+
+              {/* Navigation Links inside Sidebar */}
+              <nav className="flex flex-col gap-2 text-sm font-bold tracking-widest uppercase flex-1">
+                <SidebarNavLink to="/" label="Dashboard" onClick={() => setIsSidebarOpen(false)} />
+                <SidebarNavLink to="/tournament" label="Eliminatorias" onClick={() => setIsSidebarOpen(false)} />
+                <SidebarNavLink to="/bracket" label="Llaves" onClick={() => setIsSidebarOpen(false)} />
+                <SidebarNavLink to="/leaderboard" label="Clasificación" onClick={() => setIsSidebarOpen(false)} />
+                <SidebarNavLink to="/results" label="Resultados" onClick={() => setIsSidebarOpen(false)} />
+                <SidebarNavLink to="/bonus" label="Bonus" onClick={() => setIsSidebarOpen(false)} />
+                <SidebarNavLink to="/regions" label="Grupos" onClick={() => setIsSidebarOpen(false)} />
+                <SidebarNavLink to="/rules" label="Cómo Jugar" onClick={() => setIsSidebarOpen(false)} />
+                {isAdmin && (
+                  <SidebarNavLink
+                    to="/admin"
+                    label="Soporte"
+                    className="text-yellow-500"
+                    onClick={() => setIsSidebarOpen(false)}
+                  />
+                )}
+              </nav>
+
+              {/* Logout & Profile section at bottom of Sidebar */}
+              <div className="mt-auto pt-6 border-t border-border-main flex flex-col gap-4">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-full bg-active border-2 border-border-main overflow-hidden flex items-center justify-center font-black text-xs">
+                    {profile?.displayName?.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase() || 'CA'}
+                  </div>
+                  <div className="text-left">
+                    <p className="text-xs font-bold">{profile?.displayName}</p>
+                    <p className="text-[10px] text-accent font-black uppercase tracking-tighter italic">#{profile?.points || 0} PTS</p>
+                  </div>
+                </div>
+                <button
+                  onClick={() => {
+                    setIsSidebarOpen(false);
+                    logout();
+                  }}
+                  className="w-full bg-red-500/10 text-red-500 hover:bg-red-500 hover:text-white border border-red-500/20 rounded-xl py-3 px-4 text-xs font-bold flex items-center justify-center gap-2 transition-all cursor-pointer"
+                >
+                  <LogOut size={16} /> Cerrar Sesión
+                </button>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
+
       {/* Main Content Area */}
       <main className="flex-1 flex flex-col">
         <AnimatePresence mode="wait">
@@ -153,6 +246,32 @@ const NavLink = ({ to, label, className = "" }: { to: string, label: string, cla
           className="absolute -bottom-1 left-0 right-0 h-0.5 bg-accent rounded-full"
         />
       )}
+    </Link>
+  );
+};
+
+const SidebarNavLink = ({
+  to,
+  label,
+  className = "",
+  onClick
+}: {
+  to: string;
+  label: string;
+  className?: string;
+  onClick: () => void;
+}) => {
+  const isActive = window.location.pathname === to;
+  return (
+    <Link
+      to={to}
+      onClick={onClick}
+      className={`flex items-center px-4 py-3 rounded-xl transition-all ${isActive
+        ? "bg-active text-accent border-l-4 border-accent font-black"
+        : "text-text-muted hover:text-text-main hover:bg-white/5"
+        } ${className}`}
+    >
+      <span>{label}</span>
     </Link>
   );
 };
