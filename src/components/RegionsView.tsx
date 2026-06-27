@@ -10,7 +10,7 @@ export default function RegionsView() {
   const [matches, setMatches] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  
+
   // Vista por defecto: posiciones (as requested: "Esta sería la vista por defecto al entrar a la sección de Grupos")
   const [viewMode, setViewMode] = useState<"positions" | "regions">("positions");
 
@@ -71,8 +71,8 @@ export default function RegionsView() {
 
   // Cálculo de estadísticas por equipo
   const calculatedTeams = teams.map(team => {
-    const teamMatches = matches.filter(m => 
-      m.phase === 'GROUPS' && 
+    const teamMatches = matches.filter(m =>
+      m.phase === 'GROUPS' &&
       (m.teamAId === team.id || m.teamBId === team.id)
     );
 
@@ -150,8 +150,8 @@ export default function RegionsView() {
     if (!match || match.status !== 'FINISHED' || match.scoreA === null || match.scoreB === null) {
       // No lo ha jugado: fondo gris
       return (
-        <div 
-          key={match?.id || Math.random()} 
+        <div
+          key={match?.id || Math.random()}
           className="w-5 h-5 flex items-center justify-center rounded-full bg-neutral-700/50 border border-neutral-600 text-[10px] text-neutral-400 font-bold"
           title="Partido pendiente / sin resultado"
         >
@@ -167,8 +167,8 @@ export default function RegionsView() {
     if (teamScore > oppScore) {
       // Ganó: fondo verde, chulito
       return (
-        <div 
-          key={match.id} 
+        <div
+          key={match.id}
           className="w-5 h-5 flex items-center justify-center rounded-full bg-emerald-500 text-[10px] text-white font-black"
           title={`Ganó ${teamScore}-${oppScore}`}
         >
@@ -178,8 +178,8 @@ export default function RegionsView() {
     } else if (teamScore < oppScore) {
       // Perdió: fondo rojo, X
       return (
-        <div 
-          key={match.id} 
+        <div
+          key={match.id}
           className="w-5 h-5 flex items-center justify-center rounded-full bg-red-500 text-[10px] text-white font-black"
           title={`Perdió ${teamScore}-${oppScore}`}
         >
@@ -189,8 +189,8 @@ export default function RegionsView() {
     } else {
       // Empató: fondo amarillo, guión
       return (
-        <div 
-          key={match.id} 
+        <div
+          key={match.id}
           className="w-5 h-5 flex items-center justify-center rounded-full bg-amber-500 text-[10px] text-black font-black"
           title={`Empató ${teamScore}-${oppScore}`}
         >
@@ -209,8 +209,8 @@ export default function RegionsView() {
             {viewMode === 'positions' ? "Posiciones de Grupos" : "Equipos por Región"}
           </h1>
           <p className="text-xs text-text-muted font-semibold uppercase tracking-wider">
-            {viewMode === 'positions' 
-              ? "Tabla de posiciones en tiempo real para la Fase de Grupos" 
+            {viewMode === 'positions'
+              ? "Tabla de posiciones en tiempo real para la Fase de Grupos"
               : "Visualiza los equipos organizados por región"
             }
           </p>
@@ -258,7 +258,7 @@ export default function RegionsView() {
                         <th className="py-2 px-1 text-center w-8" title="Goles en Contra">GC</th>
                         <th className="py-2 px-1 text-center w-8" title="Diferencia de Goles">DG</th>
                         <th className="py-2 px-2 text-center w-10 text-accent">PU</th>
-                        <th className="py-2 px-2 text-center w-24">Forma</th>
+                        <th className="py-2 px-2 text-center w-24">Encuentros</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-border-main/20">

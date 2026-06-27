@@ -99,6 +99,20 @@ export class PredictionController {
       throw error;
     }
   }
+
+  async getMatchElections(req: AuthRequest, res: Response) {
+    try {
+      const matchId = parseInt(req.params.matchId, 10);
+      const elections = await predictionService.getMatchPredictionsWithRunningTotal(matchId);
+
+      res.status(200).json({
+        message: 'Match elections retrieved',
+        data: elections,
+      });
+    } catch (error) {
+      throw error;
+    }
+  }
 }
 
 export const predictionController = new PredictionController();

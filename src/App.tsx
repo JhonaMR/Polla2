@@ -25,6 +25,7 @@ import RegionsView from "./components/RegionsView";
 import AdminPanel from "./components/AdminPanel";
 import Login from "./components/Login";
 import Rules from "./components/Rules";
+import ResultsView from "./components/ResultsView";
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
   const { profile, isAdmin, logout } = useAuth();
@@ -63,6 +64,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
           <NavLink to="/tournament" label="Eliminatorias" />
           <NavLink to="/bracket" label="Llaves" />
           <NavLink to="/leaderboard" label="Clasificación" />
+          <NavLink to="/results" label="Resultados" />
           <NavLink to="/bonus" label="Bonus" />
           <NavLink to="/regions" label="Grupos" />
           <NavLink to="/rules" label="Cómo Jugar" />
@@ -188,6 +190,7 @@ export default function App() {
           <Route path="/tournament" element={<ProtectedRoute><Tournament /></ProtectedRoute>} />
           <Route path="/bracket" element={<ProtectedRoute><BracketView /></ProtectedRoute>} />
           <Route path="/leaderboard" element={<ProtectedRoute><Leaderboard /></ProtectedRoute>} />
+          <Route path="/results" element={<ProtectedRoute><ResultsView /></ProtectedRoute>} />
           <Route path="/bonus" element={<ProtectedRoute><BonusQuestions /></ProtectedRoute>} />
           <Route path="/regions" element={<ProtectedRoute><RegionsView /></ProtectedRoute>} />
           <Route path="/rules" element={<ProtectedRoute><Rules /></ProtectedRoute>} />

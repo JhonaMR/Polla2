@@ -15,6 +15,7 @@ export const predictionService = {
   getUserPredictions: (userId: number) => api.get(`/predictions/user/${userId}`),
   getMatchPredictions: (matchId: number) => api.get(`/predictions/match/${matchId}`),
   getUserStats: (userId: number) => api.get(`/predictions/user/${userId}/stats`),
+  getMatchElections: (matchId: number) => api.get(`/predictions/match/${matchId}/elections`),
 };
 
 export const bonusService = {
@@ -38,8 +39,8 @@ export const matchService = {
   getMatches: () => api.get('/matches'),
   getMatch: (id: number) => api.get(`/matches/${id}`),
   getByPhase: (phase: string) => api.get(`/matches/phase/${phase}`),
-  getUpcoming: () => api.get('/matches/upcoming'),
-  getFinished: () => api.get('/matches/finished'),
+  getUpcoming: () => api.get('/matches/status/upcoming'),
+  getFinished: () => api.get('/matches/status/finished'),
 };
 
 export const teamService = {

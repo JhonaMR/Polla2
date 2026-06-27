@@ -213,6 +213,75 @@ export class PredictionService {
       averagePointsPerPrediction: predictions.length > 0 ? totalPoints / predictions.length : 0,
     };
   }
+
+  async getMatchPredictionsWithRunningTotal(matchId: number) {
+    const match = await prisma.match.findUnique({
+      where: { id: matchId }
+    });
+    if (!match) {
+      throw new AppError('Match not found', 404);
+    }
+
+    // Get all users
+    const users = await prisma.user.findMany({
+      where: { isActive: true, role: 'USER' },
+      select: {
+        id: true,
+        username: true,
+        displayName: true,
+        points: true,
+      }
+    });
+
+    // Get all predictions for this match
+    const matchPredictions = await prisma.prediction.findMany({
+      where: { matchId },
+    });
+
+    // Map of userId -> prediction for this match
+    const predMap = new Map(matchPredictions.map(p => [p.userId, p]));
+
+    // If the match is finished, we want to calculate the running total of points up to this match number
+    let runningTotals: Record<number, number> = {};
+    if (match.status === 'FINISHED') {
+      // Get all predictions for matches with matchNumber <= this match's matchNumber
+      const pastPredictions = await prisma.prediction.findMany({
+        where: {
+          match: {
+            matchNumber: { lte: match.matchNumber },
+            status: 'FINISHED'
+          }
+        },
+        select: {
+          userId: true,
+          pointsEarned: true
+        }
+      });
+
+      // Sum them up per user
+      pastPredictions.forEach(p => {
+        runningTotals[p.userId] = (runningTotals[p.userId] || 0) + p.pointsEarned;
+      });
+    }
+
+    // Build response
+    const result = users.map(user => {
+      const pred = predMap.get(user.id);
+      return {
+        user,
+        prediction: pred ? {
+          id: pred.id,
+          predictedScoreA: pred.predictedScoreA,
+          predictedScoreB: pred.predictedScoreB,
+          pointsEarned: pred.pointsEarned,
+          isCorrect: pred.isCorrect
+        } : null,
+        runningTotal: runningTotals[user.id] || 0
+      };
+    });
+
+    return result;
+  }
 }
 
 export const predictionService = new PredictionService();

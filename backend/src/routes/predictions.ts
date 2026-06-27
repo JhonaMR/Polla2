@@ -17,6 +17,10 @@ router.get('/user/:userId', authMiddleware, (req, res, next) => {
   predictionController.getUserPredictions(req, res).catch(next);
 });
 
+router.get('/match/:matchId/elections', authMiddleware, (req, res, next) => {
+  predictionController.getMatchElections(req, res).catch(next);
+});
+
 router.get('/match/:matchId', authMiddleware, (req, res, next) => {
   predictionController.getMatchPredictions(req, res).catch(next);
 });

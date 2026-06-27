@@ -4,12 +4,14 @@ import { userService } from "../lib/services";
 import { Trophy, Search, Percent, CheckCircle2, User, ChevronUp, ChevronDown, Award } from "lucide-react";
 import { motion } from "motion/react";
 import { cn } from "../lib/utils";
+import UserHistoryModal from "./UserHistoryModal";
 
 export default function Leaderboard() {
   const { profile } = useAuth();
   const [users, setUsers] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
+  const [selectedUserForHistory, setSelectedUserForHistory] = useState<any | null>(null);
 
   const loadData = async () => {
     try {
@@ -197,15 +199,19 @@ export default function Leaderboard() {
                           )}>
                             {u.displayName?.split(" ").map((n: string) => n[0]).join("").slice(0, 2).toUpperCase() || "CA"}
                           </div>
-                          <div>
+                          <div 
+                            onClick={() => setSelectedUserForHistory(u)}
+                            className="cursor-pointer group/name"
+                            title={`Ver historial de ${u.displayName}`}
+                          >
                             <span className={cn(
-                              "text-xs font-bold flex items-center gap-1.5",
+                              "text-xs font-bold flex items-center gap-1.5 group-hover/name:text-accent group-hover/name:underline transition-colors duration-200",
                               isUser ? "text-accent font-black" : "text-text-main"
                             )}>
                               {u.displayName}
                               {isUser && <span className="text-[8px] font-black bg-accent/20 px-1.5 py-0.5 rounded-full uppercase tracking-wider text-accent leading-none">Tú</span>}
                             </span>
-                            <span className="text-[9px] text-text-muted font-bold block tracking-tighter uppercase leading-tight">
+                            <span className="text-[9px] text-text-muted font-bold block tracking-tighter uppercase leading-tight group-hover/name:text-accent/80 transition-colors duration-200">
                               @{u.username}
                             </span>
                           </div>
@@ -257,6 +263,11 @@ export default function Leaderboard() {
           </table>
         </div>
       </div>
+      <UserHistoryModal
+        isOpen={!!selectedUserForHistory}
+        onClose={() => setSelectedUserForHistory(null)}
+        user={selectedUserForHistory}
+      />
     </div>
   );
 }
