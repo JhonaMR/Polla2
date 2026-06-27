@@ -518,7 +518,7 @@ export default function Dashboard() {
           </div>
         </div>
 
-        <div className="flex-1 flex flex-col justify-center items-center relative z-10 w-full overflow-y-auto scrollbar-hide py-2">
+        <div className="flex-1 flex flex-col items-center relative z-10 w-full overflow-y-auto scrollbar-hide py-2">
            {matchesOfToday.length > 0 ? (
               <div className="w-full space-y-6">
                  <div className="text-center space-y-1">
@@ -596,7 +596,7 @@ export default function Dashboard() {
                  </button>
               </div>
            ) : (
-              <div className="text-center space-y-4 opacity-40">
+              <div className="text-center space-y-4 opacity-40 my-auto">
                  <AlertCircle size={64} className="mx-auto text-gray-600" />
                  <h3 className="text-2xl font-black italic uppercase tracking-tighter text-text-main">Fixture Pendiente</h3>
                  <p className="text-[10px] font-black uppercase tracking-widest text-text-muted">Soporte habilitará los partidos pronto</p>
