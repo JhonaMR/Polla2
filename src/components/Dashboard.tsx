@@ -93,8 +93,15 @@ function TodayMatchRow({ match, teams, prediction, onSave, onLockTrigger }: Toda
           />
         </div>
         {isFinished ? (
-          <span className="text-[9px] text-emerald-500 font-bold bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20 whitespace-nowrap">
-            Real: {match.scoreA} - {match.scoreB}
+          <span className="text-[9px] text-emerald-500 font-bold bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20 whitespace-nowrap animate-pulse inline-flex items-center gap-0.5">
+            Real: 
+            {match.penaltiesScoreA !== null && match.penaltiesScoreA !== undefined && (
+              <span className="text-[8px] text-accent font-black">({match.penaltiesScoreA})</span>
+            )}
+            <span className="mx-0.5">{match.scoreA} - {match.scoreB}</span>
+            {match.penaltiesScoreB !== null && match.penaltiesScoreB !== undefined && (
+              <span className="text-[8px] text-accent font-black">({match.penaltiesScoreB})</span>
+            )}
           </span>
         ) : (
           <span className="text-[8px] font-black uppercase text-text-muted tracking-widest">{match.phase}</span>
@@ -344,15 +351,22 @@ export default function Dashboard() {
     }
   }, [profile]);
 
-  // Obtener los próximos 2 partidos pendientes a bloquear (con elecciones abiertas)
+  // Obtener los próximos partidos del día de hoy con elecciones abiertas (máximo 2)
   useEffect(() => {
     if (allMatches.length === 0) return;
 
+    const todayLocal = new Date();
     const pending = allMatches
       .filter((m) => {
         if (m.status !== "PENDING") return false;
         const limitTime = new Date(m.matchDate).getTime() - 15 * 60 * 1000;
-        return limitTime > Date.now();
+        if (limitTime <= Date.now()) return false;
+
+        // Validar que el partido sea del día de hoy
+        const mDate = new Date(m.matchDate);
+        return mDate.getDate() === todayLocal.getDate() &&
+          mDate.getMonth() === todayLocal.getMonth() &&
+          mDate.getFullYear() === todayLocal.getFullYear();
       })
       .sort((a, b) => new Date(a.matchDate).getTime() - new Date(b.matchDate).getTime());
 
@@ -532,7 +546,7 @@ export default function Dashboard() {
           </div>
         </div>
 
-        <div className="flex-1 flex flex-col items-center relative z-10 w-full overflow-y-auto scrollbar-hide py-2">
+        <div className="flex-1 flex flex-col items-center relative z-10 w-full overflow-y-auto scrollbar-hide px-2.5 pt-4 pb-12">
           {matchesOfToday.length > 0 ? (
             <div className="w-full space-y-6">
               <div className="text-center space-y-1">
@@ -556,7 +570,7 @@ export default function Dashboard() {
               </div>
               <button
                 onClick={() => navigate("/tournament")}
-                className="bg-accent text-black font-black text-[10px] uppercase tracking-[0.2em] py-4 px-8 rounded-2xl shadow-xl shadow-accent/20 hover:scale-105 active:scale-95 transition-all w-full cursor-pointer"
+                className="bg-accent text-black font-black text-[10px] uppercase tracking-[0.2em] py-4 px-8 rounded-2xl shadow-xl shadow-accent/20 hover:scale-[1.02] active:scale-95 transition-all w-[calc(100%-16px)] mx-auto block cursor-pointer mb-2"
               >
                 MODIFICAR PRONÓSTICOS
               </button>
@@ -604,7 +618,7 @@ export default function Dashboard() {
               </div>
               <button
                 onClick={() => navigate("/tournament")}
-                className="bg-accent text-black font-black text-[10px] uppercase tracking-[0.2em] py-4 px-8 rounded-2xl shadow-xl shadow-accent/20 hover:scale-105 active:scale-95 transition-all w-full cursor-pointer"
+                className="bg-accent text-black font-black text-[10px] uppercase tracking-[0.2em] py-4 px-8 rounded-2xl shadow-xl shadow-accent/20 hover:scale-[1.02] active:scale-95 transition-all w-[calc(100%-16px)] mx-auto block cursor-pointer mb-2"
               >
                 REALIZAR PREDICCIÓN
               </button>

@@ -64,6 +64,8 @@ model Match {
   teamBId           Int?
   scoreA            Int?
   scoreB            Int?
+  penaltiesScoreA   Int?
+  penaltiesScoreB   Int?
   status            MatchStatus @default(PENDING)
   matchDate         DateTime
   matchNumber       Int

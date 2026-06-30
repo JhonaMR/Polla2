@@ -40,9 +40,9 @@ export default function ResultsView() {
   }, []);
 
   return (
-    <div className="p-4 md:p-8 space-y-6 flex flex-col min-h-[85vh]">
+    <div className="px-0 py-4 md:p-8 space-y-6 flex flex-col h-[calc(100vh-110px)] md:h-[calc(100vh-140px)]">
       {/* Header Title & Subtitle */}
-      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 shrink-0">
+      <div className="px-4 md:px-0 flex flex-col lg:flex-row lg:items-center justify-between gap-6 shrink-0">
         <div>
           <h1 className="text-3xl font-black italic uppercase tracking-tighter text-text-main">
             Resultados de la <span className="text-accent">Polla</span>
@@ -54,11 +54,11 @@ export default function ResultsView() {
       </div>
 
       {/* Main Container */}
-      <div className="flex-1 bg-card rounded-[2.5rem] border border-border-main p-6 flex flex-col overflow-hidden shadow-2xl relative">
+      <div className="flex-1 bg-card rounded-2xl md:rounded-[2.5rem] border-y border-x-0 md:border border-border-main p-3 md:p-6 flex flex-col overflow-hidden shadow-2xl relative">
         <div className="absolute -left-20 -top-20 w-64 h-64 bg-accent/5 blur-[100px] rounded-full pointer-events-none" />
 
         {/* Table wrapper */}
-        <div className="flex-1 overflow-x-auto overflow-y-auto rounded-2xl border border-border-main bg-active/20 pr-1 scrollbar-thin">
+        <div className="flex-1 overflow-x-auto overflow-y-auto rounded-xl md:rounded-2xl border-y border-x-0 md:border border-border-main bg-active/20 pr-1 scrollbar-thin">
           {loading ? (
             <div className="py-20 text-center text-text-muted text-xs font-black uppercase tracking-widest animate-pulse">
               Cargando resultados oficiales...
@@ -77,7 +77,7 @@ export default function ResultsView() {
                 <tr className="bg-active/85 border-b border-border-main/80 text-[13px] font-black italic bold uppercase tracking-tight text-text-main/90 shadow-sm">
                   <th className="py-3.5 px-6 text-center w-20 rounded-l-2xl">Partido</th>
                   <th className="py-3.5 px-6 text-center">Encuentro</th>
-                  <th className="py-3.5 px-6 text-center pr-24 w-52">Marcador Real</th>
+                  <th className="py-3.5 px-6 text-center px-4 whitespace-nowrap">Marcador Real</th>
                   <th className="py-3.5 px-6 text-center w-60 rounded-r-2xl">Acción</th>
                 </tr>
               </thead>
@@ -142,10 +142,16 @@ export default function ResultsView() {
                       </td>
 
                       {/* Match Real Marker */}
-                      <td className="py-2.5 px-6 text-center pr-24">
+                      <td className="py-2.5 px-4 text-center">
                         {isFinished ? (
-                          <span className="font-mono font-black text-xs bg-active px-3.5 py-1.5 rounded-xl border border-border-main text-text-main">
-                            {m.scoreA} - {m.scoreB}
+                          <span className="font-mono font-black text-xs bg-active px-3.5 py-1.5 rounded-xl border border-border-main text-text-main whitespace-nowrap inline-flex items-center justify-center gap-1">
+                            {m.penaltiesScoreA !== null && m.penaltiesScoreA !== undefined && (
+                              <span className="text-[10px] text-accent font-bold">({m.penaltiesScoreA})</span>
+                            )}
+                            <span>{m.scoreA} - {m.scoreB}</span>
+                            {m.penaltiesScoreB !== null && m.penaltiesScoreB !== undefined && (
+                              <span className="text-[10px] text-accent font-bold">({m.penaltiesScoreB})</span>
+                            )}
                           </span>
                         ) : (
                           <span className="text-[9px] font-black text-amber-500 bg-amber-500/10 border border-amber-500/20 px-3 py-1 rounded-full uppercase tracking-wider">

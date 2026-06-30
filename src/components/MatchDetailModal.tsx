@@ -209,17 +209,15 @@ export default function MatchDetailModal({ isOpen, onClose, match, teams }: Matc
                       </div>
 
                       {/* Draw */}
-                      {match.phase === 'GROUPS' && (
-                        <div className="space-y-1">
-                          <div className="flex justify-between text-xs font-bold">
-                            <span className="text-text-muted">Empate</span>
-                            <span className="text-text-muted">{stats.draw}%</span>
-                          </div>
-                          <div className="h-2 bg-active rounded-full overflow-hidden">
-                            <div className="h-full bg-text-muted/55 rounded-full" style={{ width: `${stats.draw}%` }} />
-                          </div>
+                      <div className="space-y-1">
+                        <div className="flex justify-between text-xs font-bold">
+                          <span className="text-text-muted">Empate</span>
+                          <span className="text-text-muted">{stats.draw}%</span>
                         </div>
-                      )}
+                        <div className="h-2 bg-active rounded-full overflow-hidden">
+                          <div className="h-full bg-text-muted/55 rounded-full" style={{ width: `${stats.draw}%` }} />
+                        </div>
+                      </div>
 
                       {/* Team B Win */}
                       <div className="space-y-1">

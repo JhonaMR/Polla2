@@ -145,8 +145,11 @@ export default function MatchElectionsModal({ isOpen, onClose, match }: MatchEle
 
               {/* Score A */}
               <div className="flex items-center justify-center p-4 col-span-1">
-                <span className="text-xl md:text-2xl font-mono font-black text-text-main">
+                <span className="text-xl md:text-2xl font-mono font-black text-text-main flex items-center gap-1.5">
                   {isFinished ? match?.scoreA : "TBD"}
+                  {isFinished && match?.penaltiesScoreA !== null && match?.penaltiesScoreA !== undefined && (
+                    <span className="text-sm font-bold text-accent">({match.penaltiesScoreA})</span>
+                  )}
                 </span>
               </div>
 
@@ -166,8 +169,11 @@ export default function MatchElectionsModal({ isOpen, onClose, match }: MatchEle
 
               {/* Score B */}
               <div className="flex items-center justify-center p-4 border-t border-border-main/40 col-span-1">
-                <span className="text-xl md:text-2xl font-mono font-black text-text-main">
+                <span className="text-xl md:text-2xl font-mono font-black text-text-main flex items-center gap-1.5">
                   {isFinished ? match?.scoreB : "TBD"}
+                  {isFinished && match?.penaltiesScoreB !== null && match?.penaltiesScoreB !== undefined && (
+                    <span className="text-sm font-bold text-accent">({match.penaltiesScoreB})</span>
+                  )}
                 </span>
               </div>
             </div>
@@ -192,7 +198,7 @@ export default function MatchElectionsModal({ isOpen, onClose, match }: MatchEle
                   No hay participantes registrados.
                 </div>
               ) : (
-                <div className="flex-1 overflow-x-auto overflow-y-auto rounded-2xl border border-border-main bg-active/20 pr-1 scrollbar-thin">
+                <div className="flex-1 overflow-x-auto overflow-y-auto rounded-none md:rounded-2xl border-y border-x-0 md:border border-border-main bg-active/20 pr-1 scrollbar-thin -mx-6 md:mx-0">
                   <table className="w-full text-left border-collapse min-w-[700px]">
                     <thead>
                       <tr className="border-b border-border-main text-[9px] font-black uppercase text-text-muted tracking-wider sticky top-0 bg-card/95 backdrop-blur-sm z-10">

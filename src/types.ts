@@ -29,6 +29,8 @@ export interface Match {
   teamBId: string;
   scoreA?: number;
   scoreB?: number;
+  penaltiesScoreA?: number;
+  penaltiesScoreB?: number;
   status: MatchStatus;
   date: string;
   matchNumber: number;

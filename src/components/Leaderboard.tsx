@@ -42,9 +42,9 @@ export default function Leaderboard() {
   const userPoints = profile?.points || 0;
 
   return (
-    <div className="p-4 md:p-8 space-y-6 flex flex-col min-h-[85vh]">
+    <div className="px-0 py-4 md:p-8 space-y-6 flex flex-col h-[calc(100vh-110px)] md:h-[calc(100vh-140px)]">
       {/* Header Title & Summary Cards */}
-      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 shrink-0">
+      <div className="px-4 md:px-0 flex flex-col lg:flex-row lg:items-center justify-between gap-6 shrink-0">
         <div>
           <h1 className="text-3xl font-black italic uppercase tracking-tighter text-text-main">
             Tabla de <span className="text-accent">Clasificación</span>
@@ -85,7 +85,7 @@ export default function Leaderboard() {
       </div>
 
       {/* Main Board Container */}
-      <div className="flex-1 bg-card rounded-[2.5rem] border border-border-main p-6 flex flex-col overflow-hidden shadow-2xl relative">
+      <div className="flex-1 bg-card rounded-2xl md:rounded-[2.5rem] border-y border-x-0 md:border border-border-main p-3 md:p-6 flex flex-col overflow-hidden shadow-2xl relative">
         <div className="absolute -left-20 -top-20 w-64 h-64 bg-accent/5 blur-[100px] rounded-full pointer-events-none" />
         
         {/* Actions bar (Search) */}

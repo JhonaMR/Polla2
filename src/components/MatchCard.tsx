@@ -13,10 +13,10 @@ interface MatchCardProps {
   onDetailTrigger: (match: any) => void;
 }
 
-const MatchCard: React.FC<MatchCardProps> = ({ 
-  match, 
-  teams, 
-  prediction, 
+const MatchCard: React.FC<MatchCardProps> = ({
+  match,
+  teams,
+  prediction,
   onSave,
   isLocked,
   onLockTrigger,
@@ -50,31 +50,37 @@ const MatchCard: React.FC<MatchCardProps> = ({
   let cardStyle = "border-border-main bg-card";
   let statusText = isFinished ? "Finalizado" : isLocked ? "Votos Cerrados" : "Eliminación Directa";
   let badgeColor = "bg-accent/10 border-accent/20 text-accent";
+  let tintClass = "";
 
   if (isFinished) {
     if (prediction) {
       const isExactScore = prediction.predictedScoreA === match.scoreA && prediction.predictedScoreB === match.scoreB;
       if (isExactScore) {
-        cardStyle = "border-emerald-500 bg-emerald-500/10 shadow-xl shadow-emerald-500/5";
+        cardStyle = "border-emerald-500 bg-card shadow-xl shadow-emerald-500/5";
         statusText = `✨ +${pts} Puntos`;
         badgeColor = "bg-emerald-500/10 border-emerald-500/20 text-emerald-400";
+        tintClass = "bg-emerald-500/10";
       } else if (pts > 0) {
-        cardStyle = "border-emerald-500/40 bg-emerald-500/5 shadow-lg shadow-emerald-500/5";
+        cardStyle = "border-emerald-500/40 bg-card shadow-lg shadow-emerald-500/5";
         statusText = `✓ +${pts} Puntos`;
         badgeColor = "bg-emerald-500/10 border-emerald-500/10 text-emerald-400";
+        tintClass = "bg-emerald-500/5";
       } else {
-        cardStyle = "border-red-500/30 bg-red-500/5";
+        cardStyle = "border-red-500/30 bg-card";
         statusText = "✕ 0 Puntos";
         badgeColor = "bg-red-500/10 border-red-500/20 text-red-400";
+        tintClass = "bg-red-500/5";
       }
     } else {
-      cardStyle = "border-red-500/20 bg-red-500/5 opacity-80";
+      cardStyle = "border-red-500/20 bg-card opacity-80";
       statusText = "✕ 0 Puntos (Sin Voto)";
       badgeColor = "bg-red-500/10 border-red-500/20 text-red-400";
+      tintClass = "bg-red-500/5";
     }
   } else if (isLocked) {
-    cardStyle = "border-border-main bg-active/60 opacity-80";
+    cardStyle = "border-border-main bg-card opacity-80";
     badgeColor = "bg-yellow-500/10 border-yellow-500/20 text-yellow-500";
+    tintClass = "bg-active/60";
   }
 
   return (
@@ -88,14 +94,19 @@ const MatchCard: React.FC<MatchCardProps> = ({
     >
       {/* Glow effects for correct predictions */}
       {isFinished && pts > 0 && (
-        <div className="absolute -top-12 -left-12 w-24 h-24 bg-emerald-500/5 rounded-full blur-2xl pointer-events-none" />
+        <div className="absolute -top-12 -left-12 w-24 h-24 bg-emerald-500/5 rounded-full blur-2xl pointer-events-none z-0" />
       )}
 
-      <div>
+      {/* Dynamic Tint Overlay */}
+      {tintClass && (
+        <div className={cn("absolute inset-0 pointer-events-none z-0", tintClass)} />
+      )}
+
+      <div className="relative z-10">
         <div className="flex justify-between items-center mb-6">
           <div className="flex items-center gap-2">
             <span className="text-[10px] font-black text-gray-500 uppercase tracking-widest leading-none">M#{match.matchNumber}</span>
-            <button 
+            <button
               onClick={() => onDetailTrigger(match)}
               className="text-gray-500 hover:text-text-main transition-colors p-1 hover:bg-active rounded-md"
               title="Detalles"
@@ -109,32 +120,34 @@ const MatchCard: React.FC<MatchCardProps> = ({
         </div>
 
         <div className="space-y-4 mb-6">
-          <TeamPredictRow 
-            team={teamA} 
-            score={scoreA} 
-            setScore={setScoreA} 
-            disabled={isLocked} 
+          <TeamPredictRow
+            team={teamA}
+            score={scoreA}
+            setScore={setScoreA}
+            disabled={isLocked}
             onLockClick={() => isLocked && onLockTrigger()}
             realScore={isFinished ? match.scoreA : undefined}
+            penaltiesScore={isFinished ? match.penaltiesScoreA : undefined}
           />
-          <TeamPredictRow 
-            team={teamB} 
-            score={scoreB} 
-            setScore={setScoreB} 
-            disabled={isLocked} 
+          <TeamPredictRow
+            team={teamB}
+            score={scoreB}
+            setScore={setScoreB}
+            disabled={isLocked}
             onLockClick={() => isLocked && onLockTrigger()}
             realScore={isFinished ? match.scoreB : undefined}
+            penaltiesScore={isFinished ? match.penaltiesScoreB : undefined}
           />
         </div>
       </div>
 
-      <button 
+      <button
         onClick={handleSave}
         disabled={isLocked}
         className={cn(
-          "w-full py-3 font-black text-[9px] uppercase tracking-[0.15em] rounded-xl transition-all shadow-xl",
-          isFinished 
-            ? "bg-active/50 text-text-muted border border-border-main/50 cursor-not-allowed shadow-none" 
+          "w-full py-3 font-black text-[9px] uppercase tracking-[0.15em] rounded-xl transition-all shadow-xl relative z-10 mb-5",
+          isFinished
+            ? "bg-active/50 text-text-muted border border-border-main/50 cursor-not-allowed shadow-none"
             : isLocked
               ? "bg-yellow-500/10 text-yellow-500 border border-yellow-500/20 cursor-pointer"
               : "bg-accent text-black hover:scale-105 active:scale-95 shadow-accent/20"
@@ -146,20 +159,22 @@ const MatchCard: React.FC<MatchCardProps> = ({
   );
 }
 
-function TeamPredictRow({ 
-  team, 
-  score, 
-  setScore, 
-  disabled, 
+function TeamPredictRow({
+  team,
+  score,
+  setScore,
+  disabled,
   onLockClick,
-  realScore
-}: { 
-  team?: any, 
-  score: string, 
-  setScore: (v: string) => void, 
+  realScore,
+  penaltiesScore
+}: {
+  team?: any,
+  score: string,
+  setScore: (v: string) => void,
   disabled: boolean,
   onLockClick?: () => void,
-  realScore?: number
+  realScore?: number,
+  penaltiesScore?: number | null
 }) {
   return (
     <div className="flex items-center gap-4 bg-active/40 p-3 rounded-2xl border border-border-main/50 hover:border-border-main transition-all shadow-inner relative">
@@ -169,12 +184,17 @@ function TeamPredictRow({
       <div className="flex-1 overflow-hidden">
         <p className="text-sm font-black uppercase tracking-tight truncate italic text-text-main">{team?.name || 'TBD'}</p>
         {realScore !== undefined && (
-          <p className="text-[9px] text-text-muted font-bold uppercase">Resultado Real: <span className="text-text-main font-black">{realScore}</span></p>
+          <p className="text-[9px] text-text-muted font-bold uppercase">
+            Resultado Real: <span className="text-text-main font-black">{realScore}</span>
+            {penaltiesScore !== undefined && penaltiesScore !== null && (
+              <span className="text-accent font-black"> ({penaltiesScore})</span>
+            )}
+          </p>
         )}
       </div>
       <div onClick={onLockClick}>
-        <input 
-          type="number" 
+        <input
+          type="number"
           value={score}
           disabled={disabled}
           onChange={(e) => setScore(e.target.value)}

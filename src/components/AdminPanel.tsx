@@ -32,7 +32,7 @@ export default function AdminPanel() {
           <p className="text-gray-500 text-[10px] font-black uppercase tracking-[0.3em]">Gestión de Competencia Season 2026</p>
         </div>
 
-        <div className="flex bg-card p-1.5 rounded-2xl border border-white/10 w-fit shadow-2xl backdrop-blur-xl overflow-x-auto no-scrollbar">
+        <div className="flex bg-card p-1.5 rounded-2xl border border-white/10 w-full max-w-full md:w-fit shadow-2xl backdrop-blur-xl overflow-x-auto no-scrollbar">
           <TabButton active={activeTab === "teams"} label="Equipos" onClick={() => setActiveTab("teams")} />
           <TabButton active={activeTab === "matches"} label="Fixture" onClick={() => setActiveTab("matches")} />
           <TabButton active={activeTab === "results"} label="Resultados" onClick={() => setActiveTab("results")} />
@@ -633,9 +633,14 @@ function ResultsInput() {
     refresh();
   }, []);
 
-  const setFinalResult = async (matchId: number, a: number, b: number) => {
+  const setFinalResult = async (matchId: number, a: number, b: number, penA?: number, penB?: number) => {
     try {
-      await adminService.finishMatch(matchId, { scoreA: a, scoreB: b });
+      await adminService.finishMatch(matchId, { 
+        scoreA: a, 
+        scoreB: b,
+        penaltiesScoreA: penA !== undefined ? penA : null,
+        penaltiesScoreB: penB !== undefined ? penB : null
+      });
       refresh();
     } catch (err) {
       console.error('Error finishing match:', err);
@@ -720,16 +725,40 @@ function ResultsInput() {
 interface ResultRowProps {
   match: any;
   teams: Record<number, any>;
-  onSave: (id: number, a: number, b: number) => void;
+  onSave: (id: number, a: number, b: number, penA?: number, penB?: number) => void;
   onDelete?: (id: number) => void;
 }
 
 const ResultRow: React.FC<ResultRowProps> = ({ match, teams, onSave, onDelete }) => {
   const [a, setA] = useState(match.scoreA?.toString() || "");
   const [b, setB] = useState(match.scoreB?.toString() || "");
+  const [penA, setPenA] = useState(match.penaltiesScoreA?.toString() || "");
+  const [penB, setPenB] = useState(match.penaltiesScoreB?.toString() || "");
+
+  const isKnockout = match.phase !== "GROUPS";
+  const isDraw = a !== "" && b !== "" && parseInt(a, 10) === parseInt(b, 10);
 
   const handleSave = () => {
-    if (a !== "" && b !== "") onSave(match.id, parseInt(a), parseInt(b));
+    if (a !== "" && b !== "") {
+      const scoreA = parseInt(a, 10);
+      const scoreB = parseInt(b, 10);
+
+      if (isKnockout && isDraw) {
+        const pA = parseInt(penA, 10);
+        const pB = parseInt(penB, 10);
+        if (isNaN(pA) || isNaN(pB)) {
+          alert("Por favor ingrese el marcador de penales para desempatar el partido de eliminación directa.");
+          return;
+        }
+        if (pA === pB) {
+          alert("El marcador de penales no puede ser un empate.");
+          return;
+        }
+        onSave(match.id, scoreA, scoreB, pA, pB);
+      } else {
+        onSave(match.id, scoreA, scoreB);
+      }
+    }
   };
 
   return (
@@ -780,6 +809,30 @@ const ResultRow: React.FC<ResultRowProps> = ({ match, teams, onSave, onDelete })
           )}
         </div>
       </div>
+
+      {isKnockout && isDraw && (
+        <div className="flex flex-col items-center gap-2 bg-black/20 p-3 rounded-xl border border-white/5 mx-auto w-full max-w-[200px]">
+          <span className="text-[9px] font-black text-gray-400 uppercase tracking-widest text-center">Goles en Penales</span>
+          <div className="flex items-center gap-2 justify-center">
+            <input 
+              type="number" 
+              value={penA} 
+              onChange={(e) => setPenA(e.target.value)} 
+              placeholder="A" 
+              className="w-12 h-8 bg-black/40 border border-white/10 rounded-lg text-center font-black text-accent outline-none text-xs" 
+            />
+            <span className="text-gray-600 font-bold text-xs">:</span>
+            <input 
+              type="number" 
+              value={penB} 
+              onChange={(e) => setPenB(e.target.value)} 
+              placeholder="B" 
+              className="w-12 h-8 bg-black/40 border border-white/10 rounded-lg text-center font-black text-accent outline-none text-xs" 
+            />
+          </div>
+        </div>
+      )}
+
       <button onClick={handleSave} className="w-full bg-accent text-black font-black uppercase italic py-3 rounded-xl shadow-lg shadow-accent/10 hover:scale-[1.02] active:scale-[0.98] transition-all text-[9px] tracking-widest mt-2 overflow-hidden flex items-center justify-center gap-2">
          {match.status === "FINISHED" ? "ACTUALIZAR RESULTADO" : "PUBLICAR RESULTADO"} <Check size={14} />
       </button>

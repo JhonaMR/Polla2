@@ -399,7 +399,7 @@ export class AdminController {
   async finishMatch(req: AuthRequest, res: Response) {
     try {
       const matchId = parseInt(req.params.matchId, 10);
-      const { scoreA, scoreB, winnerTeamId, loserTeamId } = validate(schemas.updateMatch, req.body);
+      const { scoreA, scoreB, winnerTeamId, loserTeamId, penaltiesScoreA, penaltiesScoreB } = validate(schemas.updateMatch, req.body);
 
       if (scoreA === undefined || scoreB === undefined) {
         throw new AppError('Both scores are required', 400);
@@ -418,15 +418,41 @@ export class AdminController {
         throw new AppError('Match not found', 404);
       }
 
+      let calculatedWinnerId = winnerTeamId;
+      let calculatedLoserId = loserTeamId;
+
+      // For knockout matches with a draw score, penalties are required to determine winner/loser
+      if (match.phase !== 'GROUPS' && scoreA === scoreB) {
+        if (
+          penaltiesScoreA === undefined || penaltiesScoreA === null ||
+          penaltiesScoreB === undefined || penaltiesScoreB === null
+        ) {
+          throw new AppError('Se requiere especificar el marcador de penales para empates en eliminación directa', 400);
+        }
+        if (penaltiesScoreA === penaltiesScoreB) {
+          throw new AppError('El marcador de penales no puede terminar en empate', 400);
+        }
+
+        if (penaltiesScoreA > penaltiesScoreB) {
+          calculatedWinnerId = match.teamAId || null;
+          calculatedLoserId = match.teamBId || null;
+        } else {
+          calculatedWinnerId = match.teamBId || null;
+          calculatedLoserId = match.teamAId || null;
+        }
+      }
+
       // Update match
       const updatedMatch = await prisma.match.update({
         where: { id: matchId },
         data: {
           scoreA,
           scoreB,
+          penaltiesScoreA: penaltiesScoreA !== undefined ? penaltiesScoreA : null,
+          penaltiesScoreB: penaltiesScoreB !== undefined ? penaltiesScoreB : null,
           status: 'FINISHED',
-          winnerTeamId: winnerTeamId || null,
-          loserTeamId: loserTeamId || null,
+          winnerTeamId: calculatedWinnerId || null,
+          loserTeamId: calculatedLoserId || null,
         },
         include: {
           teamA: true,
@@ -435,7 +461,7 @@ export class AdminController {
       });
 
       // Call progression service to advance winner
-      await matchProgressionService.handleMatchProgression(matchId, winnerTeamId, loserTeamId);
+      await matchProgressionService.handleMatchProgression(matchId, calculatedWinnerId || undefined, calculatedLoserId || undefined);
 
       // Calculate points for predictions
       const predictions = await prisma.prediction.findMany({

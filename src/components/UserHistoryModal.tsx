@@ -234,8 +234,14 @@ export default function UserHistoryModal({ isOpen, onClose, user }: UserHistoryM
 
                               {/* Real Result */}
                               <td className="py-3.5 px-6 text-center">
-                                <span className="font-mono font-black text-xs bg-active/40 px-3 py-1 rounded-xl border border-border-main/50 text-text-main">
-                                  {m.scoreA} - {m.scoreB}
+                                <span className="font-mono font-black text-xs bg-active/40 px-3 py-1 rounded-xl border border-border-main/50 text-text-main inline-flex items-center gap-1">
+                                  {m.penaltiesScoreA !== null && m.penaltiesScoreA !== undefined && (
+                                    <span className="text-[10px] text-accent font-bold">({m.penaltiesScoreA})</span>
+                                  )}
+                                  <span>{m.scoreA} - {m.scoreB}</span>
+                                  {m.penaltiesScoreB !== null && m.penaltiesScoreB !== undefined && (
+                                    <span className="text-[10px] text-accent font-bold">({m.penaltiesScoreB})</span>
+                                  )}
                                 </span>
                               </td>
 

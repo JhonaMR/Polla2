@@ -51,6 +51,8 @@ export const schemas = {
     status: Joi.string().valid('PENDING', 'FINISHED'),
     winnerTeamId: Joi.number().integer().min(1).optional().allow(null),
     loserTeamId: Joi.number().integer().min(1).optional().allow(null),
+    penaltiesScoreA: Joi.number().integer().min(0).optional().allow(null),
+    penaltiesScoreB: Joi.number().integer().min(0).optional().allow(null),
   }),
 
   // Admin - Bonus Questions

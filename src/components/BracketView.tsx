@@ -258,9 +258,9 @@ export default function BracketView() {
   const canvasHeight = 980; // Adjusted height for 110px spacing
 
   return (
-    <div className="p-4 md:p-8 space-y-6 flex flex-col h-[88vh]">
+    <div className="px-0 py-4 md:p-8 space-y-6 flex flex-col h-[88vh]">
       {/* Header controls */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 shrink-0">
+      <div className="px-4 md:px-0 flex flex-col md:flex-row md:items-center justify-between gap-4 shrink-0">
         <div>
           <h1 className="text-3xl font-black italic uppercase tracking-tighter text-text-main">
             Árbol <span className="text-accent underline decoration-accent/30 underline-offset-8">Clasificatorio 2026</span>
@@ -294,7 +294,7 @@ export default function BracketView() {
       </div>
 
       {/* Canvas Wrapper */}
-      <div className="relative flex-1 w-full overflow-hidden bg-black/40 border border-white/10 rounded-[2.5rem] shadow-inner">
+      <div className="relative flex-1 w-full overflow-hidden bg-black/40 border-y border-x-0 md:border border-white/10 rounded-2xl md:rounded-[2.5rem] shadow-inner">
 
         {/* Zoom Controls Overlay */}
         <div className="absolute bottom-6 right-6 flex items-center bg-card/90 border border-border-main p-1.5 rounded-2xl shadow-2xl backdrop-blur-xl gap-1 z-20">
@@ -475,25 +475,28 @@ export default function BracketView() {
                 <div className="w-[300px] shrink-0 flex flex-col items-center justify-center gap-5 relative">
 
                   {/* World Champion container (Top) */}
-                  <div className="w-60 bg-gradient-to-b from-yellow-500/20 to-card border-2 border-yellow-500 rounded-3xl p-3 flex flex-col items-center justify-center shadow-xl shadow-yellow-500/5 min-h-[90px] relative overflow-hidden z-10">
-                    <div className="absolute top-2 right-3">
-                      <Trophy className="w-4 h-4 text-yellow-500 animate-bounce" />
-                    </div>
-                    <span className="text-[7px] font-black text-yellow-500 uppercase tracking-widest mb-1.5">Campeón Mundial</span>
-                    {championTeam ? (
-                      <div className="flex flex-col items-center gap-1">
-                        <div className="w-8 h-8 rounded-full bg-active border border-yellow-500/30 flex items-center justify-center p-0.5 overflow-hidden">
-                          {championTeam.logoUrl ? (
-                            <img src={championTeam.logoUrl} className="w-full h-full object-contain rounded-full" />
-                          ) : (
-                            <Shield size={12} className="text-yellow-500" />
-                          )}
-                        </div>
-                        <span className="text-[10px] font-black uppercase italic text-white tracking-tight">{championTeam.name}</span>
+                  <div className="w-60 bg-card border-2 border-yellow-500 rounded-3xl p-3 flex flex-col items-center justify-center shadow-xl shadow-yellow-500/5 min-h-[90px] relative overflow-hidden z-10">
+                    <div className="absolute inset-0 bg-yellow-500/10 pointer-events-none z-0" />
+                    <div className="relative z-10 flex flex-col items-center justify-center w-full">
+                      <div className="absolute top-0 right-0">
+                        <Trophy className="w-4 h-4 text-yellow-500 animate-bounce" />
                       </div>
-                    ) : (
-                      <span className="text-[9px] text-text-muted font-bold uppercase tracking-wider">TBD</span>
-                    )}
+                      <span className="text-[7px] font-black text-yellow-500 uppercase tracking-widest mb-1.5">Campeón Mundial</span>
+                      {championTeam ? (
+                        <div className="flex flex-col items-center gap-1">
+                          <div className="w-8 h-8 rounded-full bg-active border border-yellow-500/30 flex items-center justify-center p-0.5 overflow-hidden">
+                            {championTeam.logoUrl ? (
+                              <img src={championTeam.logoUrl} className="w-full h-full object-contain rounded-full" />
+                            ) : (
+                              <Shield size={12} className="text-yellow-500" />
+                            )}
+                          </div>
+                          <span className="text-[10px] font-black uppercase italic text-white tracking-tight">{championTeam.name}</span>
+                        </div>
+                      ) : (
+                        <span className="text-[9px] text-text-muted font-bold uppercase tracking-wider">TBD</span>
+                      )}
+                    </div>
                   </div>
 
                   {/* World Cup Trophy & Mundial Logo */}
@@ -571,25 +574,28 @@ export default function BracketView() {
                   </div>
 
                   {/* Bronze Winner Box (Bottom) */}
-                  <div className="w-60 bg-gradient-to-b from-amber-600/10 to-card border border-amber-600/30 rounded-2xl p-2.5 flex flex-col items-center justify-center shadow-lg min-h-[75px] relative overflow-hidden z-10">
-                    <div className="absolute top-2 right-3">
-                      <Award className="w-4 h-4 text-amber-600" />
-                    </div>
-                    <span className="text-[7px] font-black text-amber-600 uppercase tracking-widest mb-1.5">Tercer Lugar</span>
-                    {bronzeWinnerTeam ? (
-                      <div className="flex items-center gap-2">
-                        <div className="w-6 h-6 rounded-full bg-active border border-amber-600/20 flex items-center justify-center p-0.5 overflow-hidden">
-                          {bronzeWinnerTeam.logoUrl ? (
-                            <img src={bronzeWinnerTeam.logoUrl} className="w-full h-full object-contain rounded-full" />
-                          ) : (
-                            <Shield size={10} className="text-amber-600" />
-                          )}
-                        </div>
-                        <span className="text-[10px] font-black uppercase italic text-white tracking-tight">{bronzeWinnerTeam.name}</span>
+                  <div className="w-60 bg-card border border-amber-600/30 rounded-2xl p-2.5 flex flex-col items-center justify-center shadow-lg min-h-[75px] relative overflow-hidden z-10">
+                    <div className="absolute inset-0 bg-amber-600/10 pointer-events-none z-0" />
+                    <div className="relative z-10 flex flex-col items-center justify-center w-full">
+                      <div className="absolute top-0 right-0">
+                        <Award className="w-4 h-4 text-amber-600" />
                       </div>
-                    ) : (
-                      <span className="text-[9px] text-text-muted font-bold uppercase tracking-wider">TBD</span>
-                    )}
+                      <span className="text-[7px] font-black text-amber-600 uppercase tracking-widest mb-1.5">Tercer Lugar</span>
+                      {bronzeWinnerTeam ? (
+                        <div className="flex items-center gap-2">
+                          <div className="w-6 h-6 rounded-full bg-active border border-amber-600/20 flex items-center justify-center p-0.5 overflow-hidden">
+                            {bronzeWinnerTeam.logoUrl ? (
+                              <img src={bronzeWinnerTeam.logoUrl} className="w-full h-full object-contain rounded-full" />
+                            ) : (
+                              <Shield size={10} className="text-amber-600" />
+                            )}
+                          </div>
+                          <span className="text-[10px] font-black uppercase italic text-white tracking-tight">{bronzeWinnerTeam.name}</span>
+                        </div>
+                      ) : (
+                        <span className="text-[9px] text-text-muted font-bold uppercase tracking-wider">TBD</span>
+                      )}
+                    </div>
                   </div>
 
                 </div>
@@ -796,8 +802,9 @@ function BracketMatchCard({ match, prediction, mode, isLocked, onSave, onCardCli
   };
 
   // Determine styling based on prediction outcome
-  let cardStyle = "bg-card/90 border-white/10";
+  let cardStyle = "bg-card border-white/10";
   let winnerId: number | null = null;
+  let tintClass = "";
 
   if (mode === "user") {
     if (prediction) {
@@ -810,15 +817,18 @@ function BracketMatchCard({ match, prediction, mode, isLocked, onSave, onCardCli
     if (match.status === "FINISHED") {
       const realWinner = match.winnerTeamId;
       if (winnerId && realWinner && winnerId === realWinner) {
-        cardStyle = "bg-emerald-500/10 border-emerald-500/40 shadow-lg shadow-emerald-500/5";
+        cardStyle = "bg-card border-emerald-500/40 shadow-lg shadow-emerald-500/5";
+        tintClass = "bg-emerald-500/10";
       } else if (winnerId) {
-        cardStyle = "bg-red-500/10 border-red-500/40";
+        cardStyle = "bg-card border-red-500/40";
+        tintClass = "bg-red-500/10";
       }
     }
   } else {
     if (match.status === "FINISHED") {
       winnerId = match.winnerTeamId;
-      cardStyle = "bg-emerald-500/5 border-emerald-500/20";
+      cardStyle = "bg-card border-emerald-500/20";
+      tintClass = "bg-emerald-500/5";
     }
   }
 
@@ -832,15 +842,20 @@ function BracketMatchCard({ match, prediction, mode, isLocked, onSave, onCardCli
         cardStyle
       )}
     >
+      {/* Dynamic Tint Overlay */}
+      {tintClass && (
+        <div className={cn("absolute inset-0 pointer-events-none rounded-2xl z-0", tintClass)} />
+      )}
+
       {/* Match number */}
-      <div className="flex items-center justify-between text-[7px] font-black text-gray-500 tracking-wider uppercase leading-none mb-0.5">
+      <div className="flex items-center justify-between text-[7px] font-black text-gray-500 tracking-wider uppercase leading-none mb-0.5 relative z-10">
         <span>Partido M#{match.matchNumber}</span>
         {isLocked && mode === "user" && <Lock size={7} className="text-yellow-500" />}
       </div>
 
       {/* Team A row */}
       <div className={cn(
-        "flex items-center justify-between py-0",
+        "flex items-center justify-between py-0 relative z-10",
         winnerId && winnerId === match.teamAId ? "text-accent font-black" : "text-text-muted",
         winnerId && winnerId !== match.teamAId && "opacity-45"
       )}>
@@ -855,6 +870,9 @@ function BracketMatchCard({ match, prediction, mode, isLocked, onSave, onCardCli
           <span className="text-xs uppercase truncate font-black tracking-tight">
             {teamA?.name || getPlaceholderName(match.matchNumber, 'A')}
           </span>
+          {mode === "real" && match.penaltiesScoreA !== null && match.penaltiesScoreA !== undefined && (
+            <span className="text-[10px] text-accent font-black shrink-0 ml-1">({match.penaltiesScoreA})</span>
+          )}
         </div>
         <input
           type="number"
@@ -888,6 +906,9 @@ function BracketMatchCard({ match, prediction, mode, isLocked, onSave, onCardCli
           <span className="text-xs uppercase truncate font-black tracking-tight">
             {teamB?.name || getPlaceholderName(match.matchNumber, 'B')}
           </span>
+          {mode === "real" && match.penaltiesScoreB !== null && match.penaltiesScoreB !== undefined && (
+            <span className="text-[10px] text-accent font-black shrink-0 ml-1">({match.penaltiesScoreB})</span>
+          )}
         </div>
         <input
           type="number"

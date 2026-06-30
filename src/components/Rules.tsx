@@ -34,21 +34,24 @@ export default function Rules() {
                 1. Pronósticos y Cierre de Elecciones
               </h3>
             </div>
-            
+
             <div className="h-px bg-border-main w-full" />
-            
+
             <div className="space-y-3 text-xs text-text-muted font-bold leading-relaxed uppercase tracking-wider">
               <p>
-                • Puedes realizar y modificar tus pronósticos en la sección de <span className="text-accent">"Eliminatorias"</span>.
+                • Puedes realizar y modificar tus pronósticos en la sección de <span className="text-accent">"Pronósticos"</span>.
               </p>
               <p>
                 • Tienes la libertad de <span className="text-text-main">llenar todo el fixture del torneo de una sola vez</span> si así lo prefieres, asegurando tu participación en partidos futuros.
               </p>
               <p>
-                • <span className="text-red-500">Cierre Individual:</span> Las elecciones se bloquean para cada partido individualmente exactamente <span className="text-text-main">15 minutos antes</span> de la hora oficial programada para su inicio. 
+                • <span className="text-red-500">Cierre Individual:</span> Las elecciones se bloquean para cada partido individualmente exactamente <span className="text-text-main">15 minutos antes</span> de la hora oficial programada para su inicio.
               </p>
               <p>
                 • Una vez cerrado el tiempo para un encuentro, ya no se podrán guardar ni modificar los marcadores pronosticados para ese partido bajo ninguna circunstancia.
+              </p>
+              <p>
+                • Desde dieciseisavos, se considera el marcador al finalizar los 120 minutos de juego (90' + prórroga). Los penales no modifican el marcador.
               </p>
             </div>
           </div>
@@ -65,9 +68,9 @@ export default function Rules() {
                 2. Sistema de Puntos por Fase
               </h3>
             </div>
-            
+
             <div className="h-px bg-border-main w-full" />
-            
+
             <p className="text-[10px] text-text-muted font-bold uppercase tracking-widest leading-relaxed">
               Los puntos acumulados dependen de la precisión de tu predicción y aumentan de valor en las fases decisivas del torneo:
             </p>
@@ -114,9 +117,9 @@ export default function Rules() {
                 3. Preguntas Bonus
               </h3>
             </div>
-            
+
             <div className="h-px bg-border-main w-full" />
-            
+
             <div className="space-y-3 text-xs text-text-muted font-bold leading-relaxed uppercase tracking-wider">
               <p>
                 • En la sección <span className="text-accent">"Bonus"</span> encontrarás preguntas adicionales sobre acontecimientos globales del torneo (ej: quién será el goleador, equipos que avanzarán, etc.).

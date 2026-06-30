@@ -71,3 +71,12 @@ html.light .text-gray-600 {
   opacity: 0.85;
 }
 
+/* Ocultar barra de desplazamiento manteniendo la funcionalidad de scroll */
+.no-scrollbar::-webkit-scrollbar {
+  display: none; /* Safari y Chrome */
+}
+.no-scrollbar {
+  -ms-overflow-style: none;  /* IE y Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+

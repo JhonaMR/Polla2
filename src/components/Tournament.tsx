@@ -169,7 +169,7 @@ export default function Tournament() {
           </p>
         </div>
         
-        <div className="flex bg-card p-1.5 rounded-2xl border border-white/10 w-fit shadow-2xl backdrop-blur-xl overflow-x-auto no-scrollbar">
+        <div className="flex bg-card p-1.5 rounded-2xl border border-white/10 w-full max-w-full md:w-fit shadow-2xl backdrop-blur-xl overflow-x-auto no-scrollbar">
           {phases.map((phase) => {
             const isDisabled = isPhaseTabDisabled(phase.id);
             return (
@@ -403,7 +403,12 @@ const MatchRow: React.FC<MatchRowProps> = ({
         <div className="flex flex-col overflow-hidden">
           <span className="text-[10px] font-black uppercase italic truncate text-text-main">{teams[match.teamAId]?.name || 'TBD'}</span>
           {isFinished && (
-            <span className="text-[9px] text-gray-500 font-bold">Real: {match.scoreA}</span>
+            <span className="text-[9px] text-gray-500 font-bold">
+              Real: {match.scoreA}
+              {match.penaltiesScoreA !== null && match.penaltiesScoreA !== undefined && (
+                <span className="text-accent font-black"> ({match.penaltiesScoreA})</span>
+              )}
+            </span>
           )}
         </div>
       </div>
@@ -439,7 +444,12 @@ const MatchRow: React.FC<MatchRowProps> = ({
         <div className="flex flex-col overflow-hidden text-right items-end">
           <span className="text-[10px] font-black uppercase italic truncate text-text-main">{teams[match.teamBId]?.name || 'TBD'}</span>
           {isFinished && (
-            <span className="text-[9px] text-gray-500 font-bold">Real: {match.scoreB}</span>
+            <span className="text-[9px] text-gray-500 font-bold">
+              Real: {match.scoreB}
+              {match.penaltiesScoreB !== null && match.penaltiesScoreB !== undefined && (
+                <span className="text-accent font-black"> ({match.penaltiesScoreB})</span>
+              )}
+            </span>
           )}
         </div>
         <div className="w-7 h-7 flex-shrink-0 rounded-full bg-card overflow-hidden border border-border-main p-0.5 shadow-md">
