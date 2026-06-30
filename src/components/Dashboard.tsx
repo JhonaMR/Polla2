@@ -8,11 +8,13 @@ import { cn } from "../lib/utils";
 import LockModal from "./LockModal";
 
 interface MatchCountdownCardProps {
+  key?: any;
   match: any;
   teams: Record<string, any>;
 }
 
 interface TodayMatchRowProps {
+  key?: any;
   match: any;
   teams: Record<string, any>;
   prediction?: any;

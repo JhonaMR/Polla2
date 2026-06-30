@@ -7,7 +7,7 @@ import { motion } from "motion/react";
 import MatchDetailModal from "./MatchDetailModal";
 
 // Connector Lines Component (Fork shape)
-const ConnectorLines = ({ height, direction = "ltr" }: { height: number, direction?: "ltr" | "rtl" }) => {
+const ConnectorLines = ({ height, direction = "ltr" }: { height: number, direction?: "ltr" | "rtl", key?: any }) => {
   const topY = height / 4;
   const bottomY = (height / 4) * 3;
   const centerY = height / 2;
